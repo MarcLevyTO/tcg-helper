@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
+// Utility function to format today's date for API URLs
 const getTodayFormatted = () => {
   const date = new Date();
   return date.toISOString().replace(/:/g, '%3A');
@@ -9,16 +10,19 @@ const getTodayFormatted = () => {
 
 const TODAY = getTodayFormatted();
 
+// API Configuration
 const RIFTBOUND_API_URL = `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=43.7418592&longitude=-79.57345579999999&num_miles=10&upcoming_only=true&game_slug=riftbound&page=1&page_size=250`;
 const LORCANA_API_URL = `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=43.7418592&longitude=-79.57345579999999&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=250`;
 const EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
 
 const Page = () => {
+  // State Management
   const [activeTab, setActiveTab] = useState<'riftbound' | 'lorcana'>('riftbound');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Utility function to format currency display
   const formatCost = (cents: number | undefined) => {
     if (!cents) return 'View Event Details';
     const dollars = cents / 100;
@@ -28,6 +32,7 @@ const Page = () => {
     }).format(dollars);
   };
 
+  // Groups events by day, returning a sorted array of [date, events] pairs
   const groupEventsByDay = (events: any[]) => {
     const grouped = new Map();
     
@@ -46,6 +51,7 @@ const Page = () => {
       .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
   };
 
+  // Groups events by week, then by day within each week
   const groupEventsByWeek = (events: any[]) => {
     const grouped = new Map();
     
@@ -72,6 +78,7 @@ const Page = () => {
       ]);
   };
 
+  // Data fetching effect
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -97,7 +104,8 @@ const Page = () => {
 
   return (
     <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="bg-gradient-to-b from-gray-800 to-gray-800/50 shadow-lg border-b border-gray-700/50">
+      {/* Sticky Header with Navigation */}
+      <div className="sticky top-0 z-10 bg-gray-800 shadow-lg border-b border-gray-700">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col space-y-4">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
@@ -129,21 +137,26 @@ const Page = () => {
         </div>
       </div>
 
+      {/* Main Content Area */}
       <div className="container mx-auto px-4 py-8">
+        {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center min-h-[200px]">
             <p className="text-lg text-gray-400">Loading events...</p>
           </div>
         )}
 
+        {/* Error State */}
         {error && (
           <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
             <p className="text-center text-red-400">{error}</p>
           </div>
         )}
 
+        {/* Event Display */}
         {data && !loading && (
           <div className="space-y-12">
+            {/* Week Sections */}
             {groupEventsByWeek(data).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
@@ -153,6 +166,7 @@ const Page = () => {
                     year: 'numeric'
                   })}
                 </h2>
+                {/* Day Sections */}
                 <div className="space-y-8">
                   {daysInWeek.map(([dayStart, events]: [string, any[]]) => (
                     <div key={dayStart} className="space-y-4">
@@ -163,9 +177,12 @@ const Page = () => {
                           day: 'numeric'
                         })}
                       </h3>
+                      {/* Event Cards Grid */}
                       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {events.map((item: any) => (
+                          // Individual Event Card
                           <li key={item.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden">
+                            {/* Event Header Image */}
                             {item.full_header_image_url && (
                               <div className="h-32 w-full bg-black">
                                 <img 
@@ -175,7 +192,9 @@ const Page = () => {
                                 />
                               </div>
                             )}
+                            {/* Event Details */}
                             <div className="flex flex-col flex-grow p-6">
+                              {/* Date and Time */}
                               <div className="mb-4">
                                 <p className="text-blue-400 font-semibold text-base">
                                   {new Date(item.start_datetime).toLocaleDateString('en-US', {
@@ -194,9 +213,11 @@ const Page = () => {
                                   })} EST
                                 </p>
                               </div>
+                              {/* Event Title */}
                               <div className="h-[3.5rem] mb-4 flex items-center">
                                 <p className="font-semibold text-gray-200 text-sm line-clamp-2">{item.name}</p>
                               </div>
+                              {/* Store Information */}
                               <div className="mt-auto pb-16">
                                 {item.store && (
                                   <div className="border-t border-gray-700/50 pt-4">
@@ -206,6 +227,7 @@ const Page = () => {
                                 )}
                               </div>
                             </div>
+                            {/* Action Button */}
                             <a 
                               href={`${EVENTS_URL}${item.id}`}
                               target="_blank"
