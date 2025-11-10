@@ -9,11 +9,15 @@ const getTodayFormatted = () => {
 };
 
 const TODAY = getTodayFormatted();
+const LATITUDE = 43.7418592;
+const LONGITUDE = -79.57345579999999;
+const NUM_MILES = 15;
 
 // API Configuration
-const RIFTBOUND_API_URL = `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=43.7418592&longitude=-79.57345579999999&num_miles=10&upcoming_only=true&game_slug=riftbound&page=1&page_size=250`;
-const LORCANA_API_URL = `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=43.7418592&longitude=-79.57345579999999&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=250`;
-const EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
+const RIFTBOUND_API_URL = `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&upcoming_only=true&game_slug=riftbound&page=1&page_size=250`;
+const LORCANA_API_URL = `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=250`;
+const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
+const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 const Page = () => {
   // State Management
@@ -229,7 +233,7 @@ const Page = () => {
                             </div>
                             {/* Action Button */}
                             <a 
-                              href={`${EVENTS_URL}${item.id}`}
+                              href={`${activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL}${item.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="absolute bottom-6 left-6 right-6 text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
