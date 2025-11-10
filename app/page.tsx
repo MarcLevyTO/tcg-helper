@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Spinner from './components/Spinner';
 
 // Utility function to format today's date for API URLs
 const getTodayFormatted = () => {
@@ -146,7 +147,7 @@ const Page = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center min-h-[200px]">
-            <p className="text-lg text-gray-400">Loading events...</p>
+            <Spinner />
           </div>
         )}
 
