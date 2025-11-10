@@ -87,7 +87,7 @@ const Page = () => {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="bg-gradient-to-b from-gray-800 to-gray-800/50 shadow-lg border-b border-gray-700/50">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col space-y-4">
