@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios, { all } from 'axios';
+import Spinner from '../components/Spinner';
 
 // Utility function to format today's date for API URLs
 const getTodayFormatted = () => {
@@ -10,9 +11,6 @@ const getTodayFormatted = () => {
 };
 
 const TODAY = getTodayFormatted();
-const LATITUDE = 43.7418592;
-const LONGITUDE = -79.57345579999999;
-const NUM_MILES = 15;
 
 const getRiftboundStoreLink = (storeId: number) => {
   return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=riftbound&page=1&page_size=1000`
@@ -20,6 +18,14 @@ const getRiftboundStoreLink = (storeId: number) => {
 
 const getLorcanaStoreLink = (storeId: number) => {
   return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=1000`
+}
+
+const getRiftboundEventLink = (eventId: number) => {
+  return `https://locator.riftbound.uvsgames.com/events/${eventId}/`
+}
+
+const getLorcanaEventLink = (eventId: number) => {
+  return `https://tcg.ravensburgerplay.com/events/${eventId}/`
 }
 
 const stores = [
@@ -149,9 +155,13 @@ const page = () => {
   const [storeData, setStoreData] = useState<{ id: number; name: string; full_address: string; riftboundEvents?: any[]; lorcanaEvents?: any[] }[]>([]);
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const allData = await Promise.all(
           stores.map(async (store) => {
@@ -171,9 +181,12 @@ const page = () => {
           })
         );
 
+        console.log('Fetched store data:', allData);
         setStoreData(allData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        setError('Failed to fetch store data.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -204,42 +217,60 @@ const page = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col space-y-4">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              Store Locations
+              TCG Store Locations
             </h1>
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {storeData.map((store) => (
-            <div
-              key={store.id}
-              className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden"
-              onClick={() => openModal(store)}
-            >
-              <div className="flex flex-col flex-grow p-6">
-                <h2 className="text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
-                <p className="text-sm text-gray-400">{store.full_address}</p>
+      <div className="container mx-auto px-4 py-8 min-h-screen">
+        {loading && (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <Spinner />
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
+            <p className="text-center text-red-400">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {storeData.map((store) => (
+              <div
+                key={store.id}
+                className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden"
+                onClick={() => openModal(store)}
+              >
+                <div className="flex flex-col flex-grow p-6">
+                  <h2 className="text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
+                  <p className="text-sm text-gray-400">{store.full_address}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {isModalOpen && selectedStore && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          className="fixed inset-0 bg-opacity-80 backdrop-blur-sm flex justify-center items-center z-50"
           onClick={closeModal}
         >
           <div
-            className="bg-gray-800/50 backdrop-blur-sm text-gray-200 rounded-lg shadow-2xl p-8 w-10/12 md:w-3/4 lg:w-2/3 xl:w-1/2 relative max-h-[700px] overflow-y-auto border border-gray-700/50"
+            className="bg-gray-800 text-gray-200 rounded-lg shadow-2xl w-10/12 md:w-3/4 lg:w-2/3 xl:w-1/2 relative max-h-[700px] overflow-y-auto border border-gray-700"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-            <h2 className="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              {selectedStore.name}
-            </h2>
-            <p className="mb-4 text-gray-400">{selectedStore.full_address}</p>
-            <ul className="pl-0 space-y-4">
+            <div className="sticky top-0 bg-gray-900 z-10 border-b border-gray-700 w-full">
+              <div className="p-6">
+                <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+                  {selectedStore.name}
+                </h2>
+                <p className="mb-4 text-gray-400 text-sm">{selectedStore.full_address}</p>
+              </div>
+            </div>
+            <ul className="pl-4 pr-4 space-y-6 mt-8 mb-8">
               {Object.entries(groupEventsByWeek([...(selectedStore.riftboundEvents || []), ...(selectedStore.lorcanaEvents || [])]
                 .sort((a, b) => {
                   const dateA = new Date(a.start_datetime);
@@ -248,23 +279,37 @@ const page = () => {
                 })))
                 .map(([week, events], index) => (
                   <li key={index} className="list-none">
-                    <h4 className="text-lg font-bold text-gray-300 mb-2">
+                    <h4 className="text-lg font-bold text-gray-300 mb-4">
                       Week of {new Date(week).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </h4>
-                    <ul className="space-y-2">
+                    <ul className="space-y-4">
                       {events.map((event, eventIndex) => (
-                        <li key={eventIndex} className="list-none p-4 rounded bg-gray-800/50 border border-gray-700/50 hover:border-blue-500/30 transition-all">
-                          <span className="block font-semibold text-sm text-blue-400">
-                            {new Date(event.start_datetime).toLocaleString('en-US', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                              hour: 'numeric',
-                              minute: 'numeric',
-                            })}
-                          </span>
-                          <span className="block text-gray-100 text-base mt-2">{event.name}</span>
+                        <li
+                          key={eventIndex}
+                          className={`list-none p-4 rounded-lg border border-gray-700/50 hover:border-blue-500/30 transition-all cursor-pointer ${
+                            event.game_type === 'RIFTBOUND' ? 'bg-red-500' : 'bg-purple-500'
+                          }`}
+                          onClick={() => {
+                            const eventLink =
+                              event.game_type === 'RIFTBOUND'
+                                ? getRiftboundEventLink(event.id)
+                                : getLorcanaEventLink(event.id);
+                            window.open(eventLink, '_blank');
+                          }}
+                        >
+                          <div className="flex flex-col">
+                            <span className="block font-semibold text-sm text-blue-100">
+                              {new Date(event.start_datetime).toLocaleString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                              })}
+                            </span>
+                            <span className="block text-white text-base mt-2">{event.name}</span>
+                          </div>
                         </li>
                       ))}
                     </ul>
