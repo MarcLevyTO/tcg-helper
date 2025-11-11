@@ -280,7 +280,7 @@ const page = () => {
                 .map(([week, events], index) => (
                   <li key={index} className="list-none">
                     <h4 className="text-lg font-bold text-gray-300 mb-4">
-                      Week of {new Date(week).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      Week of {new Date(week).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </h4>
                     <ul className="space-y-4">
                       {events.map((event, eventIndex) => (
