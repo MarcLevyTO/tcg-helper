@@ -154,9 +154,10 @@ const Events = () => {
                                       href={getGoogleMapsUrl(item.store)}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-gray-400 hover:text-blue-400 text-sm transition-colors inline-block"
+                                      className="flex items-start gap-2 text-gray-400 hover:text-blue-400 text-sm transition-colors group/maps mt-2"
                                     >
-                                      {item.store.full_address}
+                                      <span className="text-red-500 group-hover/maps:text-red-400 transition-colors flex-shrink-0 mt-0.5">📍</span>
+                                      <span className="group-hover/maps:underline">{item.store.full_address}</span>
                                     </a>
                                   </div>
                                 )}
@@ -172,7 +173,7 @@ const Events = () => {
                                 {formatCost(item.cost_in_cents)}
                               </a>
                               <a
-                                href={generateICS(item, item.store)}
+                                href={generateICS(item)}
                                 download={`${item.name}.ics`}
                                 className="py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
                                 title="Add to Calendar"

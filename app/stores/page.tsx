@@ -157,7 +157,7 @@ const page = () => {
                             <span className="block text-white text-base mt-2">{event.name}</span>
                           </div>
                           <a
-                            href={generateICS(event, selectedStore)}
+                            href={generateICS(event)}
                             download={`${event.name}.ics`}
                             onClick={(e) => e.stopPropagation()}
                             className="absolute right-4 top-1/2 -translate-y-1/2 py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-medium rounded-md transition-all shadow-lg shadow-blue-500/20"

@@ -5,13 +5,13 @@ const LONGITUDE = -79.57345579999999;
 const NUM_MILES = 12;
 const PAGE_SIZE = 250;
 
-export const generateICS = (event: any, store: any) => {
+export const generateICS = (event: any) => {
   const icsEvent = {
     title: event.name,
     start: new Date(event.start_datetime).toISOString(),
     end: new Date(new Date(event.start_datetime).getTime() + 3 * 60 * 60 * 1000).toISOString(),
-    description: `Event at ${store?.name || 'Unknown Location'}`,
-    location: store?.full_address || 'No address provided',
+    description: `Event at ${event.store?.name || 'Unknown Location'}`,
+    location: `${event.store.name} ${event.store.full_address}`,
     url: event.game_type === 'RIFTBOUND' ? `https://locator.riftbound.uvsgames.com/events/${event.id}/` : `https://tcg.ravensburgerplay.com/events/${event.id}/`
   };
   return ics(icsEvent);
