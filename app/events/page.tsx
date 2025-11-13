@@ -1,24 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { 
+  generateICS,
+  getLorcanaAPIUrl,
+  getRiftboundAPIUrl,
+  groupEventsByWeekByDay,
+  RIFTBOUND_EVENTS_URL,
+  LORCANA_EVENTS_URL,
+} from '../utils';
+
 import Spinner from '../components/Spinner';
-
-// Utility function to format today's date for API URLs
-const getTodayFormatted = () => {
-  const date = new Date();
-  return date.toISOString().replace(/:/g, '%3A');
-};
-
-const TODAY = getTodayFormatted();
-const LATITUDE = 43.7418592;
-const LONGITUDE = -79.57345579999999;
-const NUM_MILES = 15;
-
-// API Configuration
-const RIFTBOUND_API_URL = `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=all&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&game_slug=riftbound&page=1&page_size=250`;
-const LORCANA_API_URL = `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${TODAY}&display_status=all&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&game_slug=disney-lorcana&page=1&page_size=250`;
-const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
-const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 const Events = () => {
   // State Management
@@ -37,54 +29,10 @@ const Events = () => {
     }).format(dollars);
   };
 
-  // Groups events by day, returning a sorted array of [date, events] pairs
-  const groupEventsByDay = (events: any[]) => {
-    const grouped = new Map();
-    
-    events.forEach(event => {
-      const date = new Date(event.start_datetime);
-      date.setHours(0, 0, 0, 0);
-      const key = date.toISOString();
-      
-      if (!grouped.has(key)) {
-        grouped.set(key, []);
-      }
-      grouped.get(key).push(event);
-    });
-
-    return Array.from(grouped)
-      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
-  };
-
-  // Groups events by week, then by day within each week
-  const groupEventsByWeek = (events: any[]) => {
-    const grouped = new Map();
-    
-    events.forEach(event => {
-      const date = new Date(event.start_datetime);
-      const day = date.getDay();
-      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-      const monday = new Date(date.setDate(diff));
-      monday.setHours(0, 0, 0, 0);
-      
-      const key = monday.toISOString();
-      if (!grouped.has(key)) {
-        grouped.set(key, []);
-      }
-      grouped.get(key).push(event);
-    });
-
-    // Group each week's events by day
-    return Array.from(grouped)
-      .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
-      .map(([weekStart, weekEvents]) => [
-        weekStart,
-        groupEventsByDay(weekEvents)
-      ]);
-  };
-
   // Data fetching effect
   useEffect(() => {
+    const RIFTBOUND_API_URL = getRiftboundAPIUrl();
+    const LORCANA_API_URL = getLorcanaAPIUrl();
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -162,7 +110,7 @@ const Events = () => {
         {data && !loading && (
           <div className="space-y-12">
             {/* Week Sections */}
-            {groupEventsByWeek(data).map(([weekStart, daysInWeek]) => (
+            {groupEventsByWeekByDay(data).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
                   Week of {new Date(weekStart).toLocaleDateString('en-US', {
@@ -226,21 +174,49 @@ const Events = () => {
                               <div className="mt-auto pb-16">
                                 {item.store && (
                                   <div className="border-t border-gray-700/50 pt-4">
-                                    <p className="font-semibold text-gray-200 text-sm mb-4">{item.store.name}</p>
-                                    <p className="text-gray-400 text-sm">{item.store.full_address}</p>
+                                    {item.store.website ? (
+                                      <a 
+                                        href={item.store.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-semibold text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block transition-colors"
+                                      >
+                                        {item.store.name}
+                                      </a>
+                                    ) : (
+                                      <p className="font-semibold text-gray-200 text-sm mb-4">{item.store.name}</p>
+                                    )}
+                                    <a
+                                      href={`https://www.google.com/maps/search/?api=1&query=${item.store.name + ' ' + item.store.full_address}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-gray-400 hover:text-blue-400 text-sm transition-colors inline-block"
+                                    >
+                                      {item.store.full_address}
+                                    </a>
                                   </div>
                                 )}
                               </div>
                             </div>
                             {/* Action Button */}
-                            <a 
-                              href={`${activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL}${item.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="absolute bottom-6 left-6 right-6 text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
-                            >
-                              {formatCost(item.cost_in_cents)}
-                            </a>
+                            <div className="absolute bottom-6 left-6 right-6 flex gap-2">
+                              <a 
+                                href={`${activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL}${item.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
+                              >
+                                {formatCost(item.cost_in_cents)}
+                              </a>
+                              <a
+                                href={generateICS(item, item.store)}
+                                download={`${item.name}.ics`}
+                                className="py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
+                                title="Add to Calendar"
+                              >
+                                📅
+                              </a>
+                            </div>
                           </li>
                         ))}
                       </ul>
