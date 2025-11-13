@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
-import { generateICS, groupEventsByWeek, getRiftboundStoreLink, getLorcanaStoreLink } from '../utils';
+import { generateICS, groupEventsByWeek, getRiftboundStoreLink, getLorcanaStoreLink } from '../../shared/utils';
 import { stores } from '../seed';
 
 const page = () => {

@@ -3,14 +3,12 @@
 import { useState, useEffect } from 'react';
 import { 
   generateICS,
-  getLorcanaAPIUrl,
-  getRiftboundAPIUrl,
   groupEventsByWeekByDay,
   getGoogleMapsUrl,
   getEventUrl,
   formatCost,
   ensureHttps,
-} from '../utils';
+} from '../../shared/utils';
 import Spinner from '../components/Spinner';
 
 const Events = () => {
@@ -24,12 +22,12 @@ const Events = () => {
       setLoading(true);
       setError(null);
       try {
-        const apiUrl = activeTab === 'riftbound' ? getRiftboundAPIUrl() : getLorcanaAPIUrl();
+        const apiUrl = `/api/events?game=${activeTab}`;
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Network response was not ok');
         
         const result = await response.json();
-        setData(result?.results || []);
+        setData(result || []);
       } catch (error) {
         setError('Failed to fetch data');
       } finally {
