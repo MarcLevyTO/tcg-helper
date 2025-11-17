@@ -75,6 +75,18 @@ const Events = () => {
     );
   };
 
+  const registrationString = (event: any) => {
+    if (event.settings.event_lifecycle_status === 'REGISTRATION_CLOSED') {
+      return 'REGISTRATION PENDING';
+    }
+
+    if (event.registered_user_count - event.capacity >= 0) {
+      return '** EVENT FULL **';
+    }
+    
+    return `${event.registered_user_count} REGISTERED`;
+  }
+
   return (
     <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {showNotification && (
@@ -184,9 +196,10 @@ const Events = () => {
                               <div className="h-[3.5rem] mb-4 flex items-center">
                                 <p className="font-semibold text-gray-200 text-sm line-clamp-2">{item.name}</p>
                               </div>
-                              <div className="h-[1rem] mb-4 flex items-center">
-                                <p className="font-semibold text-red-400 text-sm line-clamp-2">MAX {item.capacity} PLAYERS - {item.registered_user_count} REGISTERED</p>
-                              </div>
+                                <div className="flex flex-col gap-1 mb-4">
+                                <p className="font-semibold text-red-400 text-sm">MAX {item.capacity} PLAYERS</p>
+                                <p className="font-semibold text-red-400 text-sm">{registrationString(item)}</p>
+                                </div>
                               <div className="mt-auto pb-16">
                                 {item.store && (
                                   <div className="border-t border-gray-700/50 pt-4">
