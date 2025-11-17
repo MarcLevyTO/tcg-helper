@@ -5,12 +5,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   
   const game = searchParams.get('game');
+  const latitude = searchParams.get('latitude') ?? undefined;
+  const longitude = searchParams.get('longitude') ?? undefined;
   let url: string;
 
   if (game === 'riftbound') {
-    url = getRiftboundAPIUrl();
+    url = getRiftboundAPIUrl(latitude, longitude);
   } else if (game === 'lorcana') {
-    url = getLorcanaAPIUrl();
+    url = getLorcanaAPIUrl(latitude, longitude);
   } else {
     return NextResponse.json({ error: 'Invalid game parameter' }, { status: 400 });
   }

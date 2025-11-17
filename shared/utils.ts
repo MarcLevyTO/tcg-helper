@@ -1,7 +1,7 @@
 import { ics } from 'calendar-link';
 
-const LATITUDE = 43.7418592;
-const LONGITUDE = -79.57345579999999;
+const LATITUDE = "43.7418592";
+const LONGITUDE = "-79.57345579999999";
 const NUM_MILES = 15;
 const PAGE_SIZE = 250;
 
@@ -87,14 +87,15 @@ const getTodayFormatted = () => {
 export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
 export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
-export const getRiftboundAPIUrl = () => {
+
+export const getRiftboundAPIUrl = (latitude = LATITUDE, longitude = LONGITUDE) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
 }
 
-export const getLorcanaAPIUrl = () => {
+export const getLorcanaAPIUrl = (latitude = LATITUDE, longitude = LONGITUDE) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${LATITUDE}&longitude=${LONGITUDE}&num_miles=${NUM_MILES}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
 }
 
 export const getRiftboundStoreLink = (storeId: number) => {

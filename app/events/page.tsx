@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { 
   generateICS,
   groupEventsByWeekByDay,
@@ -10,19 +11,23 @@ import {
   ensureHttps,
 } from '../../shared/utils';
 import Spinner from '../components/Spinner';
+import LocationIcon from './location.svg';
 
 const Events = () => {
   const [activeTab, setActiveTab] = useState<'riftbound' | 'lorcana'>('riftbound');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const apiUrl = `/api/events?game=${activeTab}`;
+        const apiUrl = userLocation ? `/api/events?game=${activeTab}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}` : `/api/events?game=${activeTab}`;
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Network response was not ok');
         
@@ -36,31 +41,72 @@ const Events = () => {
     };
 
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, userLocation]);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setNotificationMessage('Geolocation is not supported by your browser');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+      return;
+    }
+
+    setShowNotification(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setNotificationMessage('Using current location');
+        setTimeout(() => setShowNotification(false), 3000);
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        setNotificationMessage('Unable to retrieve your location');
+        setTimeout(() => setShowNotification(false), 3000);
+      }
+    );
+  };
 
   return (
     <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      {showNotification && (
+        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-down">
+          <p className="font-medium">{notificationMessage}</p>
+        </div>
+      )}
+
       <div className="sticky top-0 z-10 bg-gray-800 shadow-lg border-b border-gray-700">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col space-y-4">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              TCG Event Locator
-            </h1>
-            <div className="flex space-x-4 border-b border-gray-700">
-              {(['riftbound', 'lorcana'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 font-medium transition-colors ${
-                    activeTab === tab
-                      ? 'text-blue-400 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-gray-300'
-                  }`}
-                >
-                  {tab.toUpperCase()}
-                </button>
-              ))}
+          <div className="flex justify-between items-center gap-4">
+            <div className="flex flex-col space-y-4 flex-grow">
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+                TCG Event Locator
+              </h1>
+              <div className="flex space-x-4 border-b border-gray-700">
+                {(['riftbound', 'lorcana'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-2 font-medium transition-colors ${
+                      activeTab === tab
+                        ? 'text-blue-400 border-b-2 border-blue-400'
+                        : 'text-gray-400 hover:text-gray-300'
+                    }`}
+                  >
+                    {tab.toUpperCase()}
+                  </button>
+                ))}
+              </div>
             </div>
+            <button
+              onClick={handleGetLocation}
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg flex items-center gap-2 flex-shrink-0"
+            >
+              <Image src={LocationIcon} alt="Location" width={30} height={30} className="brightness-0 invert" />
+            </button>
           </div>
         </div>
       </div>
