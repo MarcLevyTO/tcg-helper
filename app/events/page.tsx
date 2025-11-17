@@ -185,7 +185,7 @@ const Events = () => {
                                 <p className="font-semibold text-gray-200 text-sm line-clamp-2">{item.name}</p>
                               </div>
                               <div className="h-[1rem] mb-4 flex items-center">
-                                <p className="font-semibold text-red-400 text-sm line-clamp-2">Max {item.capacity} players</p>
+                                <p className="font-semibold text-red-400 text-sm line-clamp-2">MAX {item.capacity} PLAYERS - {item.registered_user_count} REGISTERED</p>
                               </div>
                               <div className="mt-auto pb-16">
                                 {item.store && (
