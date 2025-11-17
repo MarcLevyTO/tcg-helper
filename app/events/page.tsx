@@ -13,12 +13,17 @@ import {
 import Spinner from '../components/Spinner';
 import LocationIcon from './location.svg';
 
+const DEFAULT_LOCATION = {
+  latitude: "43.7418592",
+  longitude: "-79.57345579999999",
+};
+
 const Events = () => {
   const [activeTab, setActiveTab] = useState<'riftbound' | 'lorcana'>('riftbound');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: string; longitude: string }>(DEFAULT_LOCATION);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
@@ -56,8 +61,8 @@ const Events = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: position.coords.latitude.toString(),
+          longitude: position.coords.longitude.toString(),
         });
         setNotificationMessage('Using current location');
         setTimeout(() => setShowNotification(false), 3000);
@@ -126,7 +131,7 @@ const Events = () => {
 
         {data && !loading && (
           <div className="space-y-12">
-            {groupEventsByWeekByDay(data).map(([weekStart, daysInWeek]) => (
+            {groupEventsByWeekByDay(data, userLocation?.latitude, userLocation?.longitude).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
                   Week of {new Date(weekStart).toLocaleDateString('en-US', {

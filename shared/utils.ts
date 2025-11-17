@@ -1,7 +1,6 @@
 import { ics } from 'calendar-link';
 
-const LATITUDE = "43.7418592";
-const LONGITUDE = "-79.57345579999999";
+
 const NUM_MILES = 15;
 const PAGE_SIZE = 250;
 
@@ -51,8 +50,24 @@ export const groupEventsByDay = (events: any[]) => {
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
 };
 
+// Calculate distance between two coordinates using Haversine formula
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  const R = 3959; // Earth's radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
 // Groups events by week, then by day within each week
-export const groupEventsByWeekByDay = (events: any[]) => {
+export const groupEventsByWeekByDay = (events: any[], latitude: string, longitude: string) => {
+  const userLat = parseFloat(latitude);
+  const userLon = parseFloat(longitude);
+
   const grouped = new Map();
   
   events.forEach(event => {
@@ -69,13 +84,24 @@ export const groupEventsByWeekByDay = (events: any[]) => {
     grouped.get(key).push(event);
   });
 
-  // Group each week's events by day
+  // Group each week's events by day, then sort by distance
   return Array.from(grouped)
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
-    .map(([weekStart, weekEvents]) => [
-      weekStart,
-      groupEventsByDay(weekEvents)
-    ]);
+    .map(([weekStart, weekEvents]) => {
+      const dayGroups = groupEventsByDay(weekEvents);
+      
+      // Sort events within each day by distance
+      const sortedDayGroups = dayGroups.map(([dayStart, dayEvents]) => {
+        const sortedEvents = dayEvents.sort((a: any, b: any) => {
+          const distA = calculateDistance(userLat, userLon, a.store.latitude, a.store.longitude);
+          const distB = calculateDistance(userLat, userLon, b.store.latitude, b.store.longitude);
+          return distA - distB;
+        });
+        return [dayStart, sortedEvents];
+      });
+      
+      return [weekStart, sortedDayGroups];
+    });
 };
 
 // Utility function to format today's date for API URLs
@@ -88,12 +114,12 @@ export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/even
 export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 
-export const getRiftboundAPIUrl = (latitude = LATITUDE, longitude = LONGITUDE) => {
+export const getRiftboundAPIUrl = (latitude: string, longitude: string) => {
   const today = getTodayFormatted();
   return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
 }
 
-export const getLorcanaAPIUrl = (latitude = LATITUDE, longitude = LONGITUDE) => {
+export const getLorcanaAPIUrl = (latitude: string, longitude: string) => {
   const today = getTodayFormatted();
   return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
 }

@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getRiftboundAPIUrl, getLorcanaAPIUrl } from '../../../shared/utils';
 
+const LATITUDE = "43.7418592";
+const LONGITUDE = "-79.57345579999999";
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   
   const game = searchParams.get('game');
-  const latitude = searchParams.get('latitude') ?? undefined;
-  const longitude = searchParams.get('longitude') ?? undefined;
+  const latitude = searchParams.get('latitude') ?? LATITUDE;
+  const longitude = searchParams.get('longitude') ?? LONGITUDE;
   let url: string;
 
   if (game === 'riftbound') {
