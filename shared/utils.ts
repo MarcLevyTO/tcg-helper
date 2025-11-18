@@ -1,6 +1,5 @@
 import { ics } from 'calendar-link';
 
-
 const NUM_MILES = 15;
 const PAGE_SIZE = 250;
 

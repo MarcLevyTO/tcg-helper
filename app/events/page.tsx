@@ -9,7 +9,8 @@ import {
   getEventUrl,
   formatCost,
   ensureHttps,
-} from '../../shared/utils';
+} from '@/shared/utils';
+import { getWebsite } from '@/shared/stores';
 import Spinner from '../components/Spinner';
 import LocationIcon from './location.svg';
 
@@ -203,9 +204,9 @@ const Events = () => {
                               <div className="mt-auto pb-16">
                                 {item.store && (
                                   <div className="border-t border-gray-700/50 pt-4">
-                                    {item.store.website ? (
+                                    {getWebsite(item.store.id, activeTab) || item.store.website ? (
                                       <a 
-                                        href={ensureHttps(item.store.website)}
+                                        href={ensureHttps(getWebsite(item.store.id, activeTab) || item.store.website)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="font-semibold text-blue-400 hover:text-blue-300 text-sm mb-4 inline-block transition-colors"
