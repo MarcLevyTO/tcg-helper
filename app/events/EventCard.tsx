@@ -9,7 +9,7 @@ import {
 } from '@/src/shared/utils';
 import { getWebsite } from '@/src/shared/stores';
 
-const EventCard = ({event, activeTab}: {event: Event, activeTab: string}) => {
+const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | 'lorcana'}) => {
   return (
     <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden">
       {event.full_header_image_url && (
