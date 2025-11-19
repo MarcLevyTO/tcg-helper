@@ -138,7 +138,7 @@ export const getGoogleMapsUrl = (store: any) => {
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 };
 
-export const getEventUrl = (eventId: string, activeTab: string) => {
+export const getEventUrl = (eventId: string | number, activeTab: string) => {
   const baseUrl = activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL;
   return `${baseUrl}${eventId}`;
 };
@@ -154,3 +154,15 @@ export const formatCost = (cents: number | undefined) => {
 export const ensureHttps = (url: string) => {
   return url.startsWith('https://') ? url : `https://${url}`;
 };
+
+export const registrationString = (event: any) => {
+  if (event.settings.event_lifecycle_status === 'REGISTRATION_CLOSED') {
+    return 'REGISTRATION PENDING';
+  }
+
+  if (event.registered_user_count - event.capacity >= 0) {
+    return '** EVENT FULL **';
+  }
+  
+  return `${event.registered_user_count} REGISTERED`;
+}
