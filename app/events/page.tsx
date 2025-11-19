@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+
+import { useEvents } from '@/app/hooks/useEvents';
+
 import { 
   generateICS,
   groupEventsByWeekByDay,
@@ -11,43 +14,22 @@ import {
   ensureHttps,
 } from '@/shared/utils';
 import { getWebsite } from '@/shared/stores';
+
 import Spinner from '../components/Spinner';
 import LocationIcon from './location.svg';
 
 const DEFAULT_LOCATION = {
-  latitude: "43.7418592",
-  longitude: "-79.57345579999999",
+  latitude: "43.7418",
+  longitude: "-79.5734",
 };
 
 const Events = () => {
   const [activeTab, setActiveTab] = useState<'riftbound' | 'lorcana'>('riftbound');
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ latitude: string; longitude: string }>(DEFAULT_LOCATION);
+  const { data = [], isLoading: loading, error } = useEvents(userLocation.latitude, userLocation.longitude, activeTab);
+  
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const apiUrl = userLocation ? `/api/events?game=${activeTab}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}` : `/api/events?game=${activeTab}`;
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const result = await response.json();
-        setData(result || []);
-      } catch (error) {
-        setError('Failed to fetch data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [activeTab, userLocation]);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -61,9 +43,10 @@ const Events = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        const userLatitude = position.coords.latitude.toFixed(4);
         setUserLocation({
-          latitude: position.coords.latitude.toString(),
-          longitude: position.coords.longitude.toString(),
+          latitude: position.coords.latitude.toFixed(4).toString(),
+          longitude: position.coords.longitude.toFixed(4).toString(),
         });
         setNotificationMessage('Using current location');
         setTimeout(() => setShowNotification(false), 3000);
