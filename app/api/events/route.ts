@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRiftboundAPIUrl, getLorcanaAPIUrl } from '../../../shared/utils';
+import { getRiftboundAPIUrl, getLorcanaAPIUrl } from '../../../src/shared/utils';
 
 const LATITUDE = "43.7418592";
 const LONGITUDE = "-79.57345579999999";

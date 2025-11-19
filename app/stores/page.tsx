@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Spinner from '../components/Spinner';
-import { generateICS, groupEventsByWeek, getRiftboundStoreLink, getLorcanaStoreLink } from '../../shared/utils';
+import Spinner from '../../src/components/Spinner';
+import { generateICS, groupEventsByWeek, getRiftboundStoreLink, getLorcanaStoreLink } from '../../src/shared/utils';
 import { stores } from '../seed';
 
 const page = () => {

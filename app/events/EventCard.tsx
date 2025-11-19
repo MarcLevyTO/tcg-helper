@@ -1,4 +1,4 @@
-import { Event } from '@/types';
+import { Event } from '@/src/types';
 import { 
   generateICS,
   getGoogleMapsUrl,
@@ -6,8 +6,8 @@ import {
   formatCost,
   ensureHttps,
   registrationString,
-} from '@/shared/utils';
-import { getWebsite } from '@/shared/stores';
+} from '@/src/shared/utils';
+import { getWebsite } from '@/src/shared/stores';
 
 const EventCard = ({event, activeTab}: {event: Event, activeTab: string}) => {
   return (

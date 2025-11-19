@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { useEvents } from '@/app/hooks/useEvents';
-import { groupEventsByWeekByDay } from '@/shared/utils';
+import { useEvents } from '@/src/hooks/useEvents';
+import { groupEventsByWeekByDay } from '@/src/shared/utils';
 
 import EventCard from './EventCard';
-import Spinner from '../components/Spinner';
-import LocationIcon from './location.svg';
+import Spinner from '@/src/components/Spinner';
+import LocationIcon from '@/features/icons/location.svg';
 
 const DEFAULT_LOCATION = {
   latitude: "43.7418",
@@ -35,7 +35,6 @@ const Events = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const userLatitude = position.coords.latitude.toFixed(4);
         setUserLocation({
           latitude: position.coords.latitude.toFixed(4).toString(),
           longitude: position.coords.longitude.toFixed(4).toString(),
@@ -44,7 +43,6 @@ const Events = () => {
         setTimeout(() => setShowNotification(false), 3000);
       },
       (error) => {
-        console.error('Error getting location:', error);
         setNotificationMessage('Unable to retrieve your location');
         setTimeout(() => setShowNotification(false), 3000);
       }
