@@ -1,4 +1,4 @@
-const stores = [
+export const stores = [
   {
     "id": 2503,
     "name": "Hope Club Collectibles",
