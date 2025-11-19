@@ -8,7 +8,7 @@ import { groupEventsByWeekByDay } from '@/src/shared/utils';
 
 import EventCard from './EventCard';
 import Spinner from '@/src/components/Spinner';
-import LocationIcon from '@/features/icons/location.svg';
+import LocationIcon from '@/src/icons/location.svg';
 
 const DEFAULT_LOCATION = {
   latitude: "43.7418",
