@@ -21,7 +21,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const response = await fetch(url);
+    console.log('Fetching data from URL:', url);
+    const response = await fetch(url, { cache: 'force-cache',  next: { revalidate: 30 * 60 * 10 } });
     const data = await response.json();
     return NextResponse.json(data.results);
   } catch (error) {
