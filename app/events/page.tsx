@@ -103,7 +103,7 @@ const Events = () => {
               <select
                 value={distance}
                 onChange={(e) => setDistanceAndSave(e.target.value)}
-                className="h-[50px] px-6 pr-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white border-none rounded-lg font-semibold transition-all duration-300 cursor-pointer hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg appearance-none"
+                className="h-[50px] px-4 pr-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white border-none rounded-lg font-semibold transition-all duration-300 cursor-pointer hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg appearance-none"
               >
                 <option value="15" className="bg-gray-800 text-white">15 miles</option>
                 <option value="20" className="bg-gray-800 text-white">20 miles</option>
