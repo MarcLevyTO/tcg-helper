@@ -128,7 +128,14 @@ export const stores = [
     "name": "Manta Trading",
     "full_address": "7170 Warden Avenue, Markham, ON, L3R 8B4, CA",
     "website": "https://mantatrading.com/collections/events"
-  },    
+  },
+  {
+    "id": 16276,
+    "name": "Northern War Table",
+    "full_address": "8888 Keele St, Concord, ON, L4K 2N2, CA",
+    "riftboundWebsite": "https://northernwartable.com/a/search?q=riftbound",
+    "lorcanaWebsite": "https://northernwartable.com/a/search?q=lorcana"
+  }    
 ];
 
 export const getWebsite = (storeId: number, game: 'riftbound' | 'lorcana'): string | null => {

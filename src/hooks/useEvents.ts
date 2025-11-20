@@ -11,5 +11,6 @@ export const useEvents = (latitude: string, longitude: string, game: string) => 
       }
       return response.json();
     },
+    staleTime: 30 * 60 * 1000,
   });
 };

@@ -108,21 +108,13 @@ const Events = () => {
             {groupEventsByWeekByDay(data, userLocation?.latitude, userLocation?.longitude).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                  Week of {new Date(weekStart).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+                  Week of {new Date(weekStart).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})}
                 </h2>
                 <div className="space-y-8">
-                  {daysInWeek.map(([dayStart, events]: [string, any[]]) => (
+                  { daysInWeek.map(([dayStart, events]: [string, any[]]) => (
                     <div key={dayStart} className="space-y-4">
                       <h3 className="text-xl font-semibold text-gray-200 px-2">
-                        {new Date(dayStart).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                        {new Date(dayStart).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric'})}
                       </h3>
                       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         {events.map((event: any) => (
