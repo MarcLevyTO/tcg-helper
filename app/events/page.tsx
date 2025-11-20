@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+import { useLocation } from '@/src/hooks/useLocation';
 import { useEvents } from '@/src/hooks/useEvents';
 import { groupEventsByWeekByDay } from '@/src/shared/utils';
 
@@ -10,15 +11,10 @@ import EventCard from './EventCard';
 import Spinner from '@/src/components/Spinner';
 import LocationIcon from '@/src/icons/location.svg';
 
-const DEFAULT_LOCATION = {
-  latitude: "43.7418",
-  longitude: "-79.5734",
-};
-
 const Events = () => {
   const [activeTab, setActiveTab] = useState<'riftbound' | 'lorcana'>('riftbound');
-  const [userLocation, setUserLocation] = useState<{ latitude: string; longitude: string }>(DEFAULT_LOCATION);
-  const { data = [], isLoading: loading, error } = useEvents(userLocation.latitude, userLocation.longitude, activeTab);
+  const { latitude, longitude, saveLocation } = useLocation();
+  const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, activeTab);
   
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
@@ -35,7 +31,7 @@ const Events = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setUserLocation({
+        saveLocation({
           latitude: position.coords.latitude.toFixed(4).toString(),
           longitude: position.coords.longitude.toFixed(4).toString(),
         });
@@ -105,7 +101,7 @@ const Events = () => {
 
         {data && !loading && (
           <div className="space-y-12">
-            {groupEventsByWeekByDay(data, userLocation?.latitude, userLocation?.longitude).map(([weekStart, daysInWeek]) => (
+            {groupEventsByWeekByDay(data, latitude, longitude).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
                   Week of {new Date(weekStart).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})}
