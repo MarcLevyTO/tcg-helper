@@ -59,7 +59,7 @@ const Events = () => {
   };
 
   return (
-    <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
+    <div className="min-w-[450px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
       {showNotification && (
         <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-down">
           <p className="font-medium">{notificationMessage}</p>
@@ -125,7 +125,7 @@ const Events = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 flex-grow">
+      <div className="container mx-auto px-4 flex-grow">
         {loading && (
           <div className="flex justify-center items-center min-h-[200px]">
             <Spinner />
@@ -139,19 +139,16 @@ const Events = () => {
         )}
 
         {filteredData && !loading && (
-          <div className="space-y-12 h-full">
+          <div className="space-y-12 h-full -mx-4">
             {groupEventsByWeekByDay(filteredData, latitude, longitude).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">
-                <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                  Week of {new Date(weekStart).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})}
-                </h2>
                 <div className="space-y-8">
                   { daysInWeek.map(([dayStart, events]: [string, any[]]) => (
                     <div key={dayStart} className="space-y-4">
-                      <h3 className="text-xl font-semibold text-gray-200 px-2">
+                      <h3 className="sticky top-[230px] z-[5] bg-gray-800 text-xl font-semibold text-gray-200 py-3 border-b border-gray-700/50 w-screen ml-[calc(-50vw+50%)] pl-[calc(50vw-50%+1rem)] text-center">
                         {new Date(dayStart).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric'})}
                       </h3>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 px-4">
                         {events.map((event: any) => (
                           <EventCard event={event} activeTab={activeTab} key={event.id} />
                         ))}
