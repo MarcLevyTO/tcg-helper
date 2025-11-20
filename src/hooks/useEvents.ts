@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-export const useEvents = (latitude: string, longitude: string, game: string) => {
+export const useEvents = (latitude: string, longitude: string, distance: string, game: string) => {
   return useQuery({
-    queryKey: ['events', game, latitude, longitude],
+    queryKey: ['events', game, latitude, longitude, distance],
     queryFn: async () => {
-      const apiUrl = (latitude && longitude) ? `/api/events?game=${game}&latitude=${latitude}&longitude=${longitude}` : `/api/events?game=${game}`;
+      const apiUrl = (latitude && longitude) ? `/api/events?game=${game}&latitude=${latitude}&longitude=${longitude}&distance=${distance}` : `/api/events?game=${game}&distance=${distance}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch events');

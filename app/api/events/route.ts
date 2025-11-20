@@ -3,6 +3,7 @@ import { getRiftboundAPIUrl, getLorcanaAPIUrl } from '@/src/shared/utils';
 
 const LATITUDE = "43.7418592";
 const LONGITUDE = "-79.57345579999999";
+const DISTANCE = "15";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,12 +11,13 @@ export async function GET(request: Request) {
   const game = searchParams.get('game');
   const latitude = searchParams.get('latitude') ?? LATITUDE;
   const longitude = searchParams.get('longitude') ?? LONGITUDE;
+  const distance = searchParams.get('distance') ?? 'DISTANCE';
   let url: string;
 
   if (game === 'riftbound') {
-    url = getRiftboundAPIUrl(latitude, longitude);
+    url = getRiftboundAPIUrl(latitude, longitude, distance);
   } else if (game === 'lorcana') {
-    url = getLorcanaAPIUrl(latitude, longitude);
+    url = getLorcanaAPIUrl(latitude, longitude, distance);
   } else {
     return NextResponse.json({ error: 'Invalid game parameter' }, { status: 400 });
   }

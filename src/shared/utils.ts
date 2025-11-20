@@ -113,14 +113,14 @@ export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/even
 export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 
-export const getRiftboundAPIUrl = (latitude: string, longitude: string) => {
+export const getRiftboundAPIUrl = (latitude: string, longitude: string, distance: string) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
 }
 
-export const getLorcanaAPIUrl = (latitude: string, longitude: string) => {
+export const getLorcanaAPIUrl = (latitude: string, longitude: string, distance: string) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${NUM_MILES}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
 }
 
 export const getRiftboundStoreLink = (storeId: number) => {
