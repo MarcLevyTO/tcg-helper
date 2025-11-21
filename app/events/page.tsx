@@ -89,13 +89,26 @@ const Events = () => {
           </div>
           
           <div className="mt-6 flex gap-4 items-center">
-            <input
-              type="text"
-              placeholder="Filter by event name..."
-              value={eventNameFilter}
-              onChange={(e) => setEventNameFilter(e.target.value)}
-              className="flex-grow px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-            />
+            <div className="relative flex-grow">
+              <input
+                type="text"
+                placeholder="Filter by event name..."
+                value={eventNameFilter}
+                onChange={(e) => setEventNameFilter(e.target.value)}
+                className="w-full px-4 py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              />
+              {eventNameFilter && (
+                <button
+                  onClick={() => setEventNameFilter('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  aria-label="Clear filter"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
             <div className="relative">
               <select
                 value={distance}
