@@ -10,6 +10,8 @@ import {
 import { getWebsite } from '@/src/shared/stores';
 
 const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | 'lorcana'}) => {
+  const eventUrl = getEventUrl(event.id, activeTab);
+
   return (
     <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden">
       {event.full_header_image_url && (
@@ -40,13 +42,13 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
             })} EST
           </p>
         </div>
-        <div className="h-[3.5rem] mb-4 flex items-center">
+        <div className="h-[1.5rem] mb-4 flex items-center">
           <p className="font-semibold text-gray-200 text-sm line-clamp-2">{event.name}</p>
         </div>
           <div className="flex flex-col gap-1 mb-4">
           <p className="font-semibold text-red-400 text-sm">MAX {event.capacity} PLAYERS</p>
           <p className="font-semibold text-red-400 text-sm">{registrationString(event)}</p>
-          </div>
+        </div>
         <div className="mt-auto pb-16">
           {event.store && (
             <div className="border-t border-gray-700/50 pt-4">
@@ -77,12 +79,12 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
       </div>
       <div className="absolute bottom-6 left-6 right-6 flex gap-2">
         <a 
-          href={getEventUrl(event.id, activeTab)}
+          href={eventUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
         >
-          {formatCost(event.cost_in_cents)}
+          {formatCost(event.cost_in_cents, event.currency)}
         </a>
         <a
           href={generateICS(event)}

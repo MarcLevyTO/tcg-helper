@@ -143,11 +143,11 @@ export const getEventUrl = (eventId: string | number, activeTab: string) => {
   return `${baseUrl}${eventId}`;
 };
 
-export const formatCost = (cents: number | undefined) => {
-  if (!cents) return 'View Event Details';
+export const formatCost = (cents: number | undefined, currency: string = 'USD') => {
+  if (!cents) return 'Price TBD';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'CAD'
+    currency: currency
   }).format(cents / 100);
 };
 
