@@ -66,13 +66,10 @@ const Events = () => {
         </div>
       )}
 
-      <div className="sticky top-0 z-10 bg-gray-800 shadow-lg border-b border-gray-700">
-        <div className="container mx-auto px-4 py-8">
+      <div id="header" className="sticky top-0 z-10 bg-gray-800 shadow-lg border-b border-gray-700">
+        <div className="container mx-auto px-4 py-5">
           <div className="flex justify-between items-center gap-4">
             <div className="flex flex-col space-y-4 flex-grow">
-              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                TCG Event Locator
-              </h1>
               <div className="flex space-x-4 border-b border-gray-700">
                 {(['riftbound', 'lorcana'] as const).map((tab) => (
                   <button
@@ -145,7 +142,7 @@ const Events = () => {
                 <div className="space-y-8">
                   { daysInWeek.map(([dayStart, events]: [string, any[]]) => (
                     <div key={dayStart} className="space-y-4">
-                      <h3 className="sticky top-[230px] z-[5] bg-gray-800 text-xl font-semibold text-gray-200 py-3 border-b border-gray-700/50 w-screen ml-[calc(-50vw+50%)] text-center">
+                      <h3 className="sticky top-[158px] z-[5] bg-gray-900 text-xl font-semibold text-gray-200 py-3 border-b border-gray-700/50 w-screen ml-[calc(-50vw+50%)] text-center">
                         {new Date(dayStart).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric'})}
                       </h3>
                       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 px-4">
