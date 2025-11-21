@@ -82,6 +82,7 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
           href={eventUrl}
           target="_blank"
           rel="noopener noreferrer"
+          title="View Event Details"
           className="flex-1 text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
         >
           {formatCost(event.cost_in_cents, event.currency)}
