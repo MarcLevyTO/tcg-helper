@@ -113,24 +113,22 @@ export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/even
 export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 
-export const getRiftboundAPIUrl = (latitude: string, longitude: string, distance: string) => {
+export const getAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  if (game === 'riftbound') {
+    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  } else {
+    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  }
 }
 
-export const getLorcanaAPIUrl = (latitude: string, longitude: string, distance: string) => {
+export const getStoreLink = (game: 'riftbound' | 'lorcana', storeId: number) => {
   const today = getTodayFormatted();
-  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
-}
-
-export const getRiftboundStoreLink = (storeId: number) => {
-  const today = getTodayFormatted();
-  return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
-}
-
-export const getLorcanaStoreLink = (storeId: number) => {
-  const today = getTodayFormatted();
-  return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  if (game === 'riftbound') {
+    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  } else {
+    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  }
 }
 
 export const getGoogleMapsUrl = (store: any) => {

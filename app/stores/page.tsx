@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '@/src/components/Spinner';
-import { generateICS, groupEventsByWeek, getRiftboundStoreLink, getLorcanaStoreLink } from '@/src/shared/utils';
+import { generateICS, groupEventsByWeek, getStoreLink } from '@/src/shared/utils';
 import { stores } from '@/src/shared/stores';
 
 const page = () => {
@@ -20,8 +20,8 @@ const page = () => {
       try {
         const allData = await Promise.all(
           stores.map(async (store) => {
-            const riftboundUrl = getRiftboundStoreLink(store.id);
-            const lorcanaUrl = getLorcanaStoreLink(store.id);
+            const riftboundUrl = getStoreLink('riftbound', store.id);
+            const lorcanaUrl = getStoreLink('lorcana', store.id);
 
             const [riftboundResponse, lorcanaResponse] = await Promise.all([
               axios.get(riftboundUrl),
