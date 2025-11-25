@@ -1,6 +1,5 @@
 import { ics } from 'calendar-link';
 
-const NUM_MILES = 15;
 const PAGE_SIZE = 500;
 
 export const generateICS = (event: any) => {
@@ -113,12 +112,29 @@ export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/even
 export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
 
 
-export const getAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
+export const getEventsAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
   const today = getTodayFormatted();
   if (game === 'riftbound') {
     return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
   } else {
     return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  }
+}
+
+export const getEventsForStoreAPIUrl = (game: 'riftbound' | 'lorcana', storeId: string) => {
+  const today = getTodayFormatted();
+  if (game === 'riftbound') {
+    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&store_id=${storeId}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
+  } else {
+    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&store_id=${storeId}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
+  }
+}
+
+export const getStoresAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
+  if (game === 'riftbound') {
+    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/game-stores/?latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_id=3&page=1&page_size=${PAGE_SIZE}`;
+  } else {
+    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/game-stores/?latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_id=1&page=1&page_size=${PAGE_SIZE}`;
   }
 }
 

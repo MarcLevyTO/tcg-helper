@@ -7,7 +7,7 @@ import { groupEventsByWeekByDay } from '@/src/shared/utils';
 
 import Header from '@/src/components/Header';
 import Spinner from '@/src/components/Spinner';
-import EventCard from './EventCard';
+import EventCard from '@/src/components/EventCard';
 
 const Events = () => {
   const { activeTab, latitude, longitude, eventDistance, eventNameFilter } = useHeader();
@@ -20,7 +20,7 @@ const Events = () => {
   return (
     <div className="min-w-[450px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
       <div className='sticky top-0 z-10'>
-        <Header />
+        <Header type='events' />
       </div>
       
 
@@ -37,7 +37,7 @@ const Events = () => {
           </div>
         )}
 
-        {filteredData && !loading && (
+        {filteredData && !loading && !error && (
           <div className="space-y-12 h-full -mx-4">
             {groupEventsByWeekByDay(filteredData, latitude, longitude).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-8">

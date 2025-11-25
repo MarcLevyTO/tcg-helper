@@ -1,181 +1,150 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+
+import { getGoogleMapsUrl, ensureHttps } from '@/src/shared/utils';
+import { getWebsite } from '@/src/shared/stores';
+
+import { useHeader } from '@/src/hooks/useHeader';
+import { useStores } from '@/src/hooks/useStores';
+import { useEventsForStore } from '@/src/hooks/useEventsForStore';
+
+import Header from '@/src/components/Header';
 import Spinner from '@/src/components/Spinner';
-import { generateICS, groupEventsByWeek, getStoreLink } from '@/src/shared/utils';
-import { stores } from '@/src/shared/stores';
+import EventCard from '@/src/components/EventCard';
 
-const page = () => {
-  const [storeData, setStoreData] = useState<{ id: number; name: string; full_address: string; riftboundEvents?: any[]; lorcanaEvents?: any[] }[]>([]);
+const Events = () => {
+  const { activeTab, latitude, longitude, eventDistance, storeNameFilter } = useHeader();
+  const { data = [], isLoading: loading, error } = useStores(latitude, longitude, eventDistance, activeTab);
+
   const [selectedStore, setSelectedStore] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [storeData, setStoreData] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const allData = await Promise.all(
-          stores.map(async (store) => {
-            const riftboundUrl = getStoreLink('riftbound', store.id);
-            const lorcanaUrl = getStoreLink('lorcana', store.id);
+  const { data: storeEventsData, isLoading: storeEventsLoading, error: storeEventsError } = useEventsForStore(selectedStore ? selectedStore.id : null, activeTab);
+  
+  const filteredData = data.filter((event: any) => 
+    event.name.toLowerCase().includes(storeNameFilter.toLowerCase())
+  );
 
-            const [riftboundResponse, lorcanaResponse] = await Promise.all([
-              axios.get(riftboundUrl),
-              axios.get(lorcanaUrl),
-            ]);
-
-            return {
-              ...store,
-              riftboundEvents: riftboundResponse.data?.results || [],
-              lorcanaEvents: lorcanaResponse.data?.results || [],
-            };
-          })
-        );
-        setStoreData(allData);
-      } catch (error) {
-        setError('Failed to fetch store data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  }, [isModalOpen]);
-
-  const openModal = (store: any) => {
+  const handleStoreSelect = (store: any) => {
     setSelectedStore(store);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setSelectedStore(null);
-    setIsModalOpen(false);
+    setStoreData(store);
   };
 
   return (
-    <div className="min-w-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="sticky top-0 z-10 bg-gray-800 shadow-lg border-b border-gray-700">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col space-y-4">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-              TCG Store Locations
-            </h1>
-          </div>
-        </div>
+    <div className="min-w-[450px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
+      <div className='sticky top-0 z-10'>
+        <Header type='stores' />
       </div>
-      <div className="container mx-auto px-4 py-8 min-h-screen">
-        {loading && (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <Spinner />
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
-            <p className="text-center text-red-400">{error}</p>
-          </div>
-        )}
-
-        {!loading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {storeData.map((store) => (
-              <div
-                key={store.id}
-                className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden"
-                onClick={() => openModal(store)}
-              >
-                <div className="flex flex-col flex-grow p-6">
-                  <h2 className="text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
-                  <p className="text-sm text-gray-400">{store.full_address}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {isModalOpen && selectedStore && (
-        <div
-          className="fixed inset-0 bg-opacity-80 backdrop-blur-sm flex justify-center items-center z-50"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-gray-800 text-gray-200 rounded-lg shadow-2xl w-10/12 md:w-3/4 lg:w-2/3 xl:w-1/2 relative max-h-[700px] overflow-y-auto border border-gray-700"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
-          >
-            <div className="sticky top-0 bg-gray-900 z-10 border-b border-gray-700 w-full">
-              <div className="p-6">
-                <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-                  {selectedStore.name}
-                </h2>
-                <p className="mb-4 text-gray-400 text-sm">{selectedStore.full_address}</p>
-              </div>
+      
+      { !selectedStore && (
+        <div className="container mx-auto px-4 flex-grow">
+          {loading && (
+            <div className="flex justify-center items-center min-h-[200px]">
+              <Spinner />
             </div>
-            <ul className="pl-4 pr-4 space-y-6 mt-8 mb-8">
-              {Object.entries(groupEventsByWeek([...(selectedStore.riftboundEvents || []), ...(selectedStore.lorcanaEvents || [])]
-                .sort((a, b) => {
-                  const dateA = new Date(a.start_datetime);
-                  const dateB = new Date(b.start_datetime);
-                  return dateA.getTime() - dateB.getTime();
-                })))
-                .map(([week, events], index) => (
-                  <li key={index} className="list-none">
-                    <h4 className="text-lg font-bold text-gray-300 mb-4">
-                      Week of {new Date(week).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                    </h4>
-                    <ul className="space-y-4">
-                      {events.map((event, eventIndex) => (
-                        <li
-                          key={eventIndex}
-                          className={`list-none p-4 rounded-lg border border-gray-700/50 hover:border-blue-500/30 transition-all cursor-pointer relative ${
-                            event.game_type === 'RIFTBOUND' ? 'bg-red-500' : 'bg-purple-500'
-                          }`}
-                        >
-                          <div className="flex flex-col pr-16">
-                            <span className="block font-semibold text-sm text-blue-100">
-                              {new Date(event.start_datetime).toLocaleString('en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: 'numeric',
-                                minute: 'numeric',
-                              })}
-                            </span>
-                            <span className="block text-white text-base mt-2">{event.name}</span>
-                          </div>
-                          <a
-                            href={generateICS(event)}
-                            download={`${event.name}.ics`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-medium rounded-md transition-all shadow-lg shadow-blue-500/20"
-                            title="Add to Calendar"
-                          >
-                            📅
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-            </ul>
+          )}
+
+          {error && (
+            <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
+              <p className="text-center text-red-400">{error.message}</p>
+            </div>
+          )}
+
+          {filteredData && !loading && !error && (
+            <div className="grid grid-cols-1 gap-6 mt-5">
+              {filteredData.map((store: any) => (
+                <div 
+                  key={store.id} 
+                  className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden cursor-pointer"
+                  onClick={() => handleStoreSelect(store)}
+                >
+                  <div className="flex flex-col flex-grow p-6">
+                    <h2 className="text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
+                    <p className="text-sm text-gray-400">{store.full_address}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+    )}
+
+    { selectedStore && storeData && (
+      <div id="selected-store" className="flex-grow">
+        <div id="store-details" className="sticky top-[158px] z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-[10px] pb-4">
+          <div className="container mx-auto px-4 flex justify-between items-start">
+            <div>
+              {getWebsite(selectedStore.id, activeTab) || selectedStore.website ? (
+                <a 
+                  href={ensureHttps(getWebsite(selectedStore.id, activeTab) || selectedStore.website)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-3xl font-semibold mb-2 text-gray-200 hover:text-blue-400 hover:underline transition-colors cursor-pointer"
+                >
+                  {selectedStore.name}
+                </a>) : (
+                <a className="text-3xl font-semibold mb-2 text-gray-200">
+                  {selectedStore.name}
+                </a>
+              )}
+              <a
+                href={getGoogleMapsUrl(selectedStore)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 text-gray-400 hover:text-blue-400 text-sm transition-colors group/maps mt-2"
+              >
+                <span className="text-red-500 group-hover/maps:text-red-400 transition-colors flex-shrink-0 mt-0.5">📍</span>
+                <span className="group-hover/maps:underline">{selectedStore.full_address}</span>
+              </a>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedStore(null);
+                setStoreData(null);
+              }}
+              className="text-gray-400 hover:text-white transition-colors p-2 cursor-pointer"
+              aria-label="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         </div>
-      )}
+
+        <div className="container mx-auto px-4">
+            {storeEventsLoading && (
+              <div className="flex justify-center items-center min-h-[200px]">
+                <Spinner />
+              </div>
+            )}
+
+            {storeEventsError && (
+              <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
+                <p className="text-center text-red-400">{storeEventsError.message}</p>
+              </div>
+            )}
+
+            { storeEventsData && storeEventsData.length > 0 && !storeEventsLoading && !storeEventsError && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-5">
+                {storeEventsData.map((event: any) => (
+                  <EventCard event={event} activeTab={activeTab} key={event.id} minimized />
+                ))}
+              </div>
+            )}
+
+            { storeEventsData && storeEventsData.length === 0 && !storeEventsLoading && !storeEventsError && (
+              <div className="flex justify-center items-center min-h-[200px]">
+                <p className="text-gray-400">No events found for this store.</p>
+              </div>
+            )}
+        </div>
+      </div>
+    )}
+
     </div>
   );
 };
 
-export default page;
+export default Events;

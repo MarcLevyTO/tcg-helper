@@ -1,12 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setActiveTab, setLocation, setEventDistance, setEventNameFilter } from "@/src/redux/headerSlice";
+import { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter } from "@/src/redux/headerSlice";
 import { useLocalStorage } from "@/src/hooks/useLocalStorage";
 import { useEffect } from "react";
-import { get } from "http";
 
 export const useHeader = () => {
   const headerData = useSelector((state: any) => state.header);
-  const { activeTab, latitude, longitude, eventDistance, eventNameFilter } = headerData;
+  const { activeTab, latitude, longitude, eventDistance, eventNameFilter, storeNameFilter } = headerData;
   const [getLatitude, setLatitude] = useLocalStorage('latitude');
   const [getLongitude, setLongitude] = useLocalStorage('longitude');
   const [getEventDistance, setSavedEventDistance] = useLocalStorage('eventDistance');
@@ -50,16 +49,22 @@ export const useHeader = () => {
     dispatch(setEventNameFilter(filter));
   };
 
+  const saveStoreNameFilter = (filter: string) => {
+    dispatch(setStoreNameFilter(filter));
+  };
+
   return {
     activeTab,
     latitude,
     longitude,
     eventDistance,
     eventNameFilter,
+    storeNameFilter,
     
     saveActiveTab,
     saveLocation,
     saveEventDistance,
     saveEventNameFilter,
+    saveStoreNameFilter,
   }
 };

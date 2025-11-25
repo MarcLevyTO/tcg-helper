@@ -7,6 +7,7 @@ const initialState = {
   longitude: DEFAULT_COORDINATES.LONGITUDE,
   eventDistance: DEFAULT_DISTANCE,
   eventNameFilter: '',
+  storeNameFilter: '',
 };
 
 export const headerSlice = createSlice({
@@ -21,15 +22,17 @@ export const headerSlice = createSlice({
       state.longitude = action.payload.longitude;
     },
     setEventDistance: (state, action) => {
-      console.log('Setting event distance to:', action);
       state.eventDistance = action.payload;
     },
     setEventNameFilter: (state, action) => {
       state.eventNameFilter = action.payload;
     },
+    setStoreNameFilter: (state, action) => {
+      state.storeNameFilter = action.payload;
+    },
   },
 });
 
-export const { setActiveTab, setLocation, setEventDistance, setEventNameFilter } = headerSlice.actions;
+export const { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter } = headerSlice.actions;
 
 export default headerSlice.reducer;

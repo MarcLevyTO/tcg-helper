@@ -9,7 +9,7 @@ export const stores = [
     "id": 14538,
     "name": "Wandering Adventures",
     "full_address": "7766 Martin Grove Road, Woodbridge, ON, L4L 2C7, CA",
-    "website": "https://wanderingadventures.ca/collections/riftbound-tcg"
+    "riftboundWebsite": "https://wanderingadventures.ca/collections/riftbound-tcg"
   },
   {
     "id": 3576,

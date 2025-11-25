@@ -5,7 +5,7 @@ import LocationIcon from '@/src/icons/location.svg';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 
-const Header = () => {
+const Header = ({ type }: { type: 'events' | 'stores' }) => {
   const { 
     showNotification,
     notificationMessage,
@@ -16,14 +16,16 @@ const Header = () => {
   const {
     activeTab,
     eventNameFilter,
+    storeNameFilter,
     eventDistance,
     saveEventDistance,
     saveActiveTab,
     saveEventNameFilter,
+    saveStoreNameFilter,
     saveLocation,
   } = useHeader();
 
-  const [localFilter, setLocalFilter] = useState(eventNameFilter);
+  const [localFilter, setLocalFilter] = useState(type === 'events' ? eventNameFilter : storeNameFilter);
   const debounceTimer = useRef<NodeJS.Timeout>(null);
 
   const handleGetLocation = () => {
@@ -61,9 +63,23 @@ const Header = () => {
     }
     
     debounceTimer.current = setTimeout(() => {
-      saveEventNameFilter(value);
+      if (type === 'events') {
+        saveEventNameFilter(value);
+      } else {
+        saveStoreNameFilter(value);
+      }
     }, 300);
   }
+
+  const handleChangeTab = (tab: 'riftbound' | 'lorcana') => {
+    setLocalFilter('');
+    if (type === 'events') {
+      saveEventNameFilter('');
+    } else {
+      saveStoreNameFilter('');
+    } 
+    saveActiveTab(tab);
+  };
 
   return (
     <div>
@@ -81,7 +97,7 @@ const Header = () => {
                 {(['riftbound', 'lorcana'] as const).map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => saveActiveTab(tab)}
+                    onClick={() => handleChangeTab(tab)}
                     className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
                       activeTab === tab
                         ? 'text-blue-400 border-b-2 border-blue-400'
@@ -99,7 +115,7 @@ const Header = () => {
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder="Filter by event name..."
+                placeholder={type === 'events' ? "Filter by event name..." : "Filter by store name..."}
                 value={localFilter}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -108,7 +124,11 @@ const Header = () => {
                 <button
                   onClick={() => {
                     setLocalFilter('');
-                    saveEventNameFilter('');
+                    if (type === 'events') {
+                      saveEventNameFilter('');
+                    } else {
+                      saveStoreNameFilter('');
+                    }
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   aria-label="Clear filter"

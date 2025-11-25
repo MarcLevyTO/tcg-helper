@@ -9,13 +9,13 @@ import {
 } from '@/src/shared/utils';
 import { getWebsite } from '@/src/shared/stores';
 
-const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | 'lorcana'}) => {
+const EventCard = ({event, activeTab, minimized = false}: {event: Event, activeTab: 'riftbound' | 'lorcana', minimized?: boolean}) => {
   const eventUrl = getEventUrl(event.id, activeTab);
 
   return (
-    <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden">
+    <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden pb-20">
       {event.full_header_image_url && (
-        <div className="h-32 w-full bg-black">
+        <div className="w-full bg-black">
           <img 
             src={event.full_header_image_url} 
             alt={event.name}
@@ -23,7 +23,7 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
           />
         </div>
       )}
-      <div className="flex flex-col flex-grow p-6">
+      <div className="flex flex-col flex-grow p-6 pb-0">
         <div className="mb-4">
           <p className="text-blue-400 font-semibold text-base">
             {new Date(event.start_datetime).toLocaleDateString('en-US', {
@@ -45,13 +45,13 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
         <div className="h-[1.5rem] mb-4 flex items-center">
           <p className="font-semibold text-gray-200 text-sm line-clamp-2">{event.name}</p>
         </div>
-          <div className="flex flex-col gap-1 mb-4">
+        <div className="flex flex-col gap-1">
           <p className="font-semibold text-red-400 text-sm">MAX {event.capacity} PLAYERS</p>
           <p className="font-semibold text-red-400 text-sm">{registrationString(event)}</p>
         </div>
-        <div className="mt-auto pb-16">
+        { !minimized && <div className="">
           {event.store && (
-            <div className="border-t border-gray-700/50 pt-4">
+            <div className="border-t border-gray-700/50 pt-4 mt-5">
               {getWebsite(event.store.id, activeTab) || event.store.website ? (
                 <a 
                   href={ensureHttps(getWebsite(event.store.id, activeTab) || event.store.website)}
@@ -76,6 +76,7 @@ const EventCard = ({event, activeTab}: {event: Event, activeTab: 'riftbound' | '
             </div>
           )}
         </div>
+      }
       </div>
       <div className="absolute bottom-6 left-6 right-6 flex gap-2">
         <a 
