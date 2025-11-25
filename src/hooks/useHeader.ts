@@ -47,7 +47,7 @@ export const useHeader = () => {
   };
 
   const saveEventNameFilter = (filter: string) => {
-    (setEventNameFilter(filter));
+    dispatch(setEventNameFilter(filter));
   };
 
   return {

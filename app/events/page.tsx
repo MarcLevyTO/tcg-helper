@@ -11,9 +11,6 @@ import EventCard from './EventCard';
 
 const Events = () => {
   const { activeTab, latitude, longitude, eventDistance, eventNameFilter } = useHeader();
-
-  console.log(activeTab, latitude, longitude, eventDistance, eventNameFilter);
-
   const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, eventDistance, activeTab);
   
   const filteredData = data.filter((event: any) => 

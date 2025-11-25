@@ -3,6 +3,7 @@ import { useNotifications } from "@/src/hooks/useNotifications";
 import LocationIcon from '@/src/icons/location.svg';
 
 import Image from 'next/image';
+import { useRef, useState } from 'react';
 
 const Header = () => {
   const { 
@@ -21,6 +22,9 @@ const Header = () => {
     saveEventNameFilter,
     saveLocation,
   } = useHeader();
+
+  const [localFilter, setLocalFilter] = useState(eventNameFilter);
+  const debounceTimer = useRef<NodeJS.Timeout>(null);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -47,6 +51,19 @@ const Header = () => {
       }
     );
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalFilter(value);
+    
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    
+    debounceTimer.current = setTimeout(() => {
+      saveEventNameFilter(value);
+    }, 300);
+  }
 
   return (
     <div>
@@ -83,13 +100,16 @@ const Header = () => {
               <input
                 type="text"
                 placeholder="Filter by event name..."
-                value={eventNameFilter}
-                onChange={(e) => saveEventNameFilter(e.target.value)}
+                value={localFilter}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
-              {eventNameFilter && (
+              {localFilter && (
                 <button
-                  onClick={() => saveEventNameFilter('')}
+                  onClick={() => {
+                    setLocalFilter('');
+                    saveEventNameFilter('');
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   aria-label="Clear filter"
                 >
