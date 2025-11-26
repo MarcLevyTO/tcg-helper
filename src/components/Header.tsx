@@ -1,9 +1,9 @@
-import { useHeader } from "@/src/hooks/useHeader";
-import { useNotifications } from "@/src/hooks/useNotifications";
-import LocationIcon from '@/src/icons/location.svg';
-
-import Image from 'next/image';
 import { useRef, useState } from 'react';
+import Image from 'next/image';
+
+import { useHeader } from '@/src/hooks/useHeader';
+import { useNotifications } from '@/src/hooks/useNotifications';
+import LocationIcon from '@/src/icons/location.svg';
 
 const Header = ({ type }: { type: 'events' | 'stores' }) => {
   const { 
@@ -69,7 +69,7 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
         saveStoreNameFilter(value);
       }
     }, 300);
-  }
+  };
 
   const handleChangeTab = (tab: 'riftbound' | 'lorcana') => {
     setLocalFilter('');
@@ -107,6 +107,29 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                     {tab.toUpperCase()}
                   </button>
                 ))}
+                <div className="flex-grow" />
+                <a
+                  key="events"
+                  href="/events"
+                  className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
+                  type === 'events'
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  EVENTS
+                </a>
+                <a
+                  key="stores"
+                  href="/stores"
+                  className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
+                  type === 'stores'
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  STORES
+                </a>
               </div>
             </div>
           </div>
@@ -115,7 +138,7 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder={type === 'events' ? "Filter by event name..." : "Filter by store name..."}
+                placeholder={type === 'events' ? 'Filter by event name...' : 'Filter by store name...'}
                 value={localFilter}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -151,7 +174,12 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                 <option value="30" className="bg-gray-800 text-white">30 miles</option>
                 <option value="40" className="bg-gray-800 text-white">40 miles</option>
               </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none" fill="none" stroke="white" viewBox="0 0 24 24">
+              <svg 
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none" 
+                fill="none" 
+                stroke="white" 
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -159,13 +187,19 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
               onClick={handleGetLocation}
               className="h-[50px] px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg flex items-center gap-2 flex-shrink-0 cursor-pointer"
             >
-              <Image src={LocationIcon} alt="Location" width={24} height={24} className="brightness-0 invert" />
+              <Image 
+                src={LocationIcon} 
+                alt="Location" 
+                width={24} 
+                height={24} 
+                className="brightness-0 invert" 
+              />
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Header;
