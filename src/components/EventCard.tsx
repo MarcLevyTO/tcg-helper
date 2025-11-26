@@ -13,7 +13,7 @@ const EventCard = ({event, activeTab, minimized = false}: {event: Event, activeT
   const eventUrl = getEventUrl(event.id, activeTab);
 
   return (
-    <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[280px] sm:min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden pb-16 sm:pb-20">
+    <li key={event.id} className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative sm:min-h-[320px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden pb-16 sm:pb-20">
       {event.full_header_image_url && !minimized && (
         <div className="w-full bg-black hidden sm:block">
           <img 
