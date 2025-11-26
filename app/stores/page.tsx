@@ -73,7 +73,7 @@ const Events = () => {
     { selectedStore && storeData && (
       <div id="selected-store" className="flex-grow">
         <div id="store-details" className="sticky top-[158px] z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-[10px] pb-4">
-          <div className="container mx-auto px-4 flex justify-between items-start">
+          <div className="container mx-auto px-4 flex justify-between items-center">
             <div>
               {getWebsite(selectedStore.id, activeTab) || selectedStore.website ? (
                 <a 
@@ -103,7 +103,7 @@ const Events = () => {
                 setSelectedStore(null);
                 setStoreData(null);
               }}
-              className="text-gray-400 hover:text-white transition-colors p-2 cursor-pointer"
+              className="text-gray-400 hover:text-white transition-colors p-2 cursor-pointer flex-shrink-0"
               aria-label="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
