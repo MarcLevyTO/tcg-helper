@@ -46,12 +46,12 @@ const Events = () => {
   }, [selectedStore, scrollPosition]);
 
   return (
-    <div className="min-w-[450px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
+    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
       <div className="sticky top-0 z-10">
         <Header type="stores" />
       </div>
       
-      <div className={`container mx-auto px-4 flex-grow ${selectedStore ? 'hidden' : ''}`}>
+      <div className={`container mx-auto px-2 sm:px-4 flex-grow ${selectedStore ? 'hidden' : ''}`}>
         {loading && (
           <div className="flex justify-center items-center min-h-[200px]">
             <Spinner />
@@ -59,22 +59,22 @@ const Events = () => {
         )}
 
         {error && (
-          <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
+          <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6 mx-2">
             <p className="text-center text-red-400">{error.message}</p>
           </div>
         )}
 
         {filteredData && !loading && !error && (
-          <div className="grid grid-cols-1 gap-6 mt-5">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 mt-5">
             {filteredData.map((store: any) => (
               <div 
                 key={store.id} 
-                className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden cursor-pointer"
+                className="group bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 relative min-h-[120px] sm:min-h-[150px] border border-gray-700/50 hover:border-blue-500/30 flex flex-col overflow-hidden cursor-pointer"
                 onClick={() => handleStoreSelect(store)}
               >
-                <div className="flex flex-col flex-grow p-6">
-                  <h2 className="text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
-                  <p className="text-sm text-gray-400">{store.full_address}</p>
+                <div className="flex flex-col flex-grow p-4 sm:p-6">
+                  <h2 className="text-lg sm:text-2xl font-semibold mb-2 text-gray-200">{store.name}</h2>
+                  <p className="text-xs sm:text-sm text-gray-400">{store.full_address}</p>
                 </div>
               </div>
             ))}
@@ -84,20 +84,20 @@ const Events = () => {
 
       {selectedStore && storeData && (
         <div id="selected-store" className="flex-grow">
-          <div id="store-details" className="sticky top-[158px] z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-[10px] pb-4">
-            <div className="container mx-auto px-4 flex justify-between items-center">
-              <div>
+          <div id="store-details" className="sticky top-[162px] sm:top-[185px] z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-[10px] pb-4">
+            <div className="container mx-auto px-2 sm:px-4 flex justify-between items-start gap-2 sm:gap-4">
+              <div className="flex-1 min-w-0">
                 {getWebsite(selectedStore.id, activeTab) || selectedStore.website ? (
                   <a 
                     href={ensureHttps(getWebsite(selectedStore.id, activeTab) || selectedStore.website)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-3xl font-semibold mb-2 text-gray-200 hover:text-blue-400 hover:underline transition-colors cursor-pointer"
+                    className="text-xl sm:text-3xl font-semibold mb-2 text-gray-200 hover:text-blue-400 hover:underline transition-colors cursor-pointer block"
                   >
                     {selectedStore.name}
                   </a>
                 ) : (
-                  <span className="text-3xl font-semibold mb-2 text-gray-200">
+                  <span className="text-xl sm:text-3xl font-semibold mb-2 text-gray-200 block">
                     {selectedStore.name}
                   </span>
                 )}
@@ -105,27 +105,27 @@ const Events = () => {
                   href={getGoogleMapsUrl(selectedStore)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-gray-400 hover:text-blue-400 text-sm transition-colors group/maps mt-2"
+                  className="flex items-start gap-2 text-gray-400 hover:text-blue-400 text-xs sm:text-sm transition-colors group/maps mt-2"
                 >
                   <span className="text-red-500 group-hover/maps:text-red-400 transition-colors flex-shrink-0 mt-0.5">
                     📍
                   </span>
-                  <span className="group-hover/maps:underline">{selectedStore.full_address}</span>
+                  <span className="group-hover/maps:underline break-words">{selectedStore.full_address}</span>
                 </a>
               </div>
               <button
                 onClick={() => handleStoreSelect(null)}
-                className="text-gray-400 hover:text-white transition-colors p-2 cursor-pointer flex-shrink-0"
+                className="text-gray-400 hover:text-white transition-colors p-1 sm:p-2 cursor-pointer flex-shrink-0"
                 aria-label="Close"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
           </div>
 
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-2 sm:px-4">
             {storeEventsLoading && (
               <div className="flex justify-center items-center min-h-[200px]">
                 <Spinner />
@@ -133,13 +133,13 @@ const Events = () => {
             )}
 
             {storeEventsError && (
-              <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6">
+              <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/50 rounded-lg p-4 mb-6 mx-2">
                 <p className="text-center text-red-400">{storeEventsError.message}</p>
               </div>
             )}
 
             {storeEventsData && storeEventsData.length > 0 && !storeEventsLoading && !storeEventsError && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 mt-5">
                 {storeEventsData.map((event: any) => (
                   <EventCard event={event} activeTab={activeTab} key={event.id} minimized />
                 ))}
@@ -148,7 +148,7 @@ const Events = () => {
 
             {storeEventsData && storeEventsData.length === 0 && !storeEventsLoading && !storeEventsError && (
               <div className="flex justify-center items-center min-h-[200px]">
-                <p className="text-gray-400">No events found for this store.</p>
+                <p className="text-gray-400 text-sm sm:text-base">No events found for this store.</p>
               </div>
             )}
           </div>

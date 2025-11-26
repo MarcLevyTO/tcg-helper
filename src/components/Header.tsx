@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 
@@ -84,21 +86,21 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
   return (
     <div>
       {showNotification && (
-        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-down">
+        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg animate-fade-in-down text-sm sm:text-base">
           <p className="font-medium">{notificationMessage}</p>
         </div>
       )}
 
       <div id="header" className="z-10 bg-gray-800 shadow-lg border-b border-gray-700">
-        <div className="container mx-auto px-4 py-5">
-          <div className="flex justify-between items-center gap-4">
-            <div className="flex flex-col space-y-4 flex-grow">
-              <div className="flex space-x-4 border-b border-gray-700">
+        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-5">
+          <div className="flex justify-between items-center gap-2 sm:gap-4">
+            <div className="flex flex-col space-y-3 sm:space-y-4 flex-grow">
+              <div className="flex space-x-2 sm:space-x-4 border-b border-gray-700 overflow-x-auto">
                 {(['riftbound', 'lorcana'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => handleChangeTab(tab)}
-                    className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
+                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
                       activeTab === tab
                         ? 'text-blue-400 border-b-2 border-blue-400'
                         : 'text-gray-400 hover:text-gray-300'
@@ -111,10 +113,10 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                 <a
                   key="events"
                   href="/events"
-                  className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
-                  type === 'events'
-                    ? 'text-blue-400 border-b-2 border-blue-400'
-                    : 'text-gray-400 hover:text-gray-300'
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
+                    type === 'events'
+                      ? 'text-blue-400 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-gray-300'
                   }`}
                 >
                   EVENTS
@@ -122,10 +124,10 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                 <a
                   key="stores"
                   href="/stores"
-                  className={`px-4 py-2 font-medium transition-colors cursor-pointer ${
-                  type === 'stores'
-                    ? 'text-blue-400 border-b-2 border-blue-400'
-                    : 'text-gray-400 hover:text-gray-300'
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
+                    type === 'stores'
+                      ? 'text-blue-400 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-gray-300'
                   }`}
                 >
                   STORES
@@ -134,14 +136,14 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
             </div>
           </div>
           
-          <div className="mt-6 flex gap-4 items-center">
+          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
             <div className="relative flex-grow">
               <input
                 type="text"
                 placeholder={type === 'events' ? 'Filter by event name...' : 'Filter by store name...'}
                 value={localFilter}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-sm sm:text-base"
               />
               {localFilter && (
                 <button
@@ -153,48 +155,50 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                       saveStoreNameFilter('');
                     }
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   aria-label="Clear filter"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               )}
             </div>
-            <div className="relative">
-              <select
-                value={eventDistance}
-                onChange={(e) => saveEventDistance(e.target.value)}
-                className="h-[50px] px-4 pr-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white border-none rounded-lg font-semibold transition-all duration-300 cursor-pointer hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg appearance-none"
+            <div className="flex gap-2 sm:gap-4">
+              <div className="relative flex-1 sm:flex-initial">
+                <select
+                  value={eventDistance}
+                  onChange={(e) => saveEventDistance(e.target.value)}
+                  className="w-full h-[40px] sm:h-[50px] px-3 sm:px-4 pr-8 sm:pr-10 bg-gradient-to-r from-blue-600 to-blue-700 text-white border-none rounded-lg font-semibold transition-all duration-300 cursor-pointer hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg appearance-none text-xs sm:text-base"
+                >
+                  <option value="15" className="bg-gray-800 text-white">15 miles</option>
+                  <option value="20" className="bg-gray-800 text-white">20 miles</option>
+                  <option value="25" className="bg-gray-800 text-white">25 miles</option>
+                  <option value="30" className="bg-gray-800 text-white">30 miles</option>
+                  <option value="40" className="bg-gray-800 text-white">40 miles</option>
+                </select>
+                <svg 
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" 
+                  fill="none" 
+                  stroke="white" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <button
+                onClick={handleGetLocation}
+                className="h-[40px] sm:h-[50px] px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg flex items-center gap-2 flex-shrink-0 cursor-pointer"
               >
-                <option value="15" className="bg-gray-800 text-white">15 miles</option>
-                <option value="20" className="bg-gray-800 text-white">20 miles</option>
-                <option value="25" className="bg-gray-800 text-white">25 miles</option>
-                <option value="30" className="bg-gray-800 text-white">30 miles</option>
-                <option value="40" className="bg-gray-800 text-white">40 miles</option>
-              </select>
-              <svg 
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none" 
-                fill="none" 
-                stroke="white" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+                <Image 
+                  src={LocationIcon} 
+                  alt="Location" 
+                  width={20} 
+                  height={20} 
+                  className="brightness-0 invert sm:w-6 sm:h-6" 
+                />
+              </button>
             </div>
-            <button
-              onClick={handleGetLocation}
-              className="h-[50px] px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg flex items-center gap-2 flex-shrink-0 cursor-pointer"
-            >
-              <Image 
-                src={LocationIcon} 
-                alt="Location" 
-                width={24} 
-                height={24} 
-                className="brightness-0 invert" 
-              />
-            </button>
           </div>
         </div>
       </div>
