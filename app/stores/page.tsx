@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { getGoogleMapsUrl, ensureHttps } from '@/src/shared/utils';
 import { getWebsite } from '@/src/shared/stores';
@@ -20,6 +20,7 @@ const Events = () => {
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [storeData, setStoreData] = useState<any>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const { 
     data: storeEventsData, 
@@ -34,6 +35,12 @@ const Events = () => {
   const handleStoreSelect = (store: any) => {
     if (store) {
       setScrollPosition(window.scrollY);
+    } else {
+      // Measure header height when closing
+      const header = document.getElementById('header');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
     }
     setSelectedStore(store);
     setStoreData(store);
@@ -41,9 +48,26 @@ const Events = () => {
 
   useEffect(() => {
     if (!selectedStore && scrollPosition > 0) {
-      window.scrollTo(0, scrollPosition);
+      // Use setTimeout to ensure DOM is updated before scrolling
+      setTimeout(() => {
+        window.scrollTo(0, scrollPosition);
+      }, 0);
     }
   }, [selectedStore, scrollPosition]);
+
+  useEffect(() => {
+    // Measure header height on mount and resize
+    const measureHeader = () => {
+      const header = document.getElementById('header');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
+    };
+
+    measureHeader();
+    window.addEventListener('resize', measureHeader);
+    return () => window.removeEventListener('resize', measureHeader);
+  }, []);
 
   return (
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
@@ -84,7 +108,11 @@ const Events = () => {
 
       {selectedStore && storeData && (
         <div id="selected-store" className="flex-grow">
-          <div id="store-details" className="sticky top-[162px] sm:top-[185px] z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-[10px] pb-4">
+          <div 
+            id="store-details" 
+            className="sticky z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-2 sm:pt-[10px] pb-3 sm:pb-4"
+            style={{ top: `${headerHeight}px` }}
+          >
             <div className="container mx-auto px-2 sm:px-4 flex justify-between items-start gap-2 sm:gap-4">
               <div className="flex-1 min-w-0">
                 {getWebsite(selectedStore.id, activeTab) || selectedStore.website ? (
