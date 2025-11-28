@@ -1,9 +1,9 @@
-import { ics } from 'calendar-link';
+import { google, outlook, office365, yahoo, ics } from 'calendar-link';
 
 const PAGE_SIZE = 500;
 
-export const generateICS = (event: any) => {
-  const icsEvent = {
+export const generateCalendarLinks = (event: any) => {
+  const calendarEvent = {
     title: event.name,
     start: new Date(event.start_datetime).toISOString(),
     end: new Date(new Date(event.start_datetime).getTime() + 3 * 60 * 60 * 1000).toISOString(),
@@ -11,7 +11,19 @@ export const generateICS = (event: any) => {
     location: `${event.store.name} ${event.store.full_address}`,
     url: event.game_type === 'RIFTBOUND' ? `https://locator.riftbound.uvsgames.com/events/${event.id}/` : `https://tcg.ravensburgerplay.com/events/${event.id}/`
   };
-  return ics(icsEvent);
+
+  return {
+    google: google(calendarEvent),
+    outlook: outlook(calendarEvent),
+    office365: office365(calendarEvent),
+    yahoo: yahoo(calendarEvent),
+    ics: ics(calendarEvent)
+  };
+};
+
+// Keep the old function for backward compatibility
+export const generateICS = (event: any) => {
+  return generateCalendarLinks(event).ics;
 };
 
 export const groupEventsByWeek = (events: any[]) => {
@@ -32,12 +44,12 @@ export const groupEventsByWeek = (events: any[]) => {
 // Groups events by day, returning a sorted array of [date, events] pairs
 export const groupEventsByDay = (events: any[]) => {
   const grouped = new Map();
-  
+
   events.forEach(event => {
     const date = new Date(event.start_datetime);
     date.setHours(0, 0, 0, 0);
     const key = date.toISOString();
-    
+
     if (!grouped.has(key)) {
       grouped.set(key, []);
     }
@@ -53,7 +65,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   const R = 3959; // Earth's radius in miles
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -67,14 +79,14 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
   const userLon = parseFloat(longitude);
 
   const grouped = new Map();
-  
+
   events.forEach(event => {
     const date = new Date(event.start_datetime);
     const day = date.getDay();
     const diff = date.getDate() - day + (day === 0 ? -6 : 1);
     const monday = new Date(date.setDate(diff));
     monday.setHours(0, 0, 0, 0);
-    
+
     const key = monday.toISOString();
     if (!grouped.has(key)) {
       grouped.set(key, []);
@@ -87,7 +99,7 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
     .map(([weekStart, weekEvents]) => {
       const dayGroups = groupEventsByDay(weekEvents);
-      
+
       // Sort events within each day by distance
       const sortedDayGroups = dayGroups.map(([dayStart, dayEvents]) => {
         const sortedEvents = dayEvents.sort((a: any, b: any) => {
@@ -97,7 +109,7 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
         });
         return [dayStart, sortedEvents];
       });
-      
+
       return [weekStart, sortedDayGroups];
     });
 };
@@ -177,6 +189,6 @@ export const registrationString = (event: any) => {
   if (event.registered_user_count - event.capacity >= 0) {
     return '** EVENT FULL **';
   }
-  
+
   return `${event.registered_user_count} REGISTERED`;
 }
