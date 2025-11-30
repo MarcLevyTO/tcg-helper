@@ -1,11 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { DEFAULT_GAME, DEFAULT_COORDINATES, DEFAULT_DISTANCE } from "@/src/constants";
+import { useLocalStorage } from "@/src/hooks/useLocalStorage";
+
+const [getLatitude, setLatitude] = useLocalStorage('latitude');
+const [getLongitude, setLongitude] = useLocalStorage('longitude');
+const [getEventDistance, setSavedEventDistance] = useLocalStorage('eventDistance');
 
 const initialState = {
   activeTab: DEFAULT_GAME,
-  latitude: DEFAULT_COORDINATES.LATITUDE,
-  longitude: DEFAULT_COORDINATES.LONGITUDE,
-  eventDistance: DEFAULT_DISTANCE,
+  latitude: getLatitude() || DEFAULT_COORDINATES.LATITUDE,
+  longitude: getLongitude() || DEFAULT_COORDINATES.LONGITUDE,
+  eventDistance: getEventDistance() || DEFAULT_DISTANCE,
   eventNameFilter: '',
   storeNameFilter: '',
 };
@@ -18,10 +23,13 @@ export const headerSlice = createSlice({
       state.activeTab = action.payload;
     },
     setLocation: (state, action) => {
+      setLatitude(action.payload.latitude);
+      setLongitude(action.payload.longitude);
       state.latitude = action.payload.latitude;
       state.longitude = action.payload.longitude;
     },
     setEventDistance: (state, action) => {
+      setSavedEventDistance(action.payload);
       state.eventDistance = action.payload;
     },
     setEventNameFilter: (state, action) => {
