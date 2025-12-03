@@ -179,6 +179,9 @@ export const formatCost = (cents: number | undefined, currency: string = 'USD') 
 };
 
 export const ensureHttps = (url: string) => {
+  if (!url) {
+    return '';
+  }
   return url.startsWith('https://') ? url : `https://${url}`;
 };
 
