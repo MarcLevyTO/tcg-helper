@@ -1,0 +1,134 @@
+interface Coordinates {
+  type: string;
+  coordinates: [number, number];
+}
+
+interface Store {
+  id: number;
+  name: string;
+  full_address: string;
+  administrative_area_level_1_short: string;
+  country: string;
+  website: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface GameplayFormat {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface EventSettings {
+  id: number;
+  decklist_status: string;
+  decklists_on_spicerack: boolean;
+  event_lifecycle_status: string;
+  show_registration_button: boolean;
+  round_duration_in_minutes: number;
+  payment_in_store: boolean;
+  payment_on_spicerack: boolean;
+  maximum_number_of_game_wins_per_match: number;
+  maximum_number_of_draws_per_match: number | null;
+  checkin_methods: string[];
+  stripe_price_id: string | null;
+  maximum_number_of_players_in_match: number;
+  enable_waitlist: boolean;
+}
+
+interface Round {
+  id: number;
+  round_number: number;
+  final_round_in_event: boolean;
+  pairings_status: string;
+  standings_status: string;
+  round_type: string;
+  status: string;
+}
+
+interface TournamentPhase {
+  id: number;
+  phase_name: string;
+  phase_description: string;
+  first_round_type: string | null;
+  status: string;
+  order_in_phases: number;
+  number_of_rounds: number | null;
+  round_type: string;
+  rank_required_to_enter_phase: number | null;
+  effective_maximum_number_of_game_wins_per_match: number;
+  rounds: Round[];
+}
+
+interface TournamentEvent {
+  id: number;
+  full_header_image_url: string;
+  start_datetime: string;
+  end_datetime: string | null;
+  day_2_start_datetime: string | null;
+  timer_end_datetime: string;
+  timer_paused_at_datetime: string;
+  timer_is_running: boolean;
+  description: string;
+  settings: EventSettings;
+  tournament_phases: TournamentPhase[];
+  registered_user_count: number;
+  full_address: string;
+  name: string;
+  pinned_by_store: boolean;
+  use_verbatim_name: boolean;
+  queue_status: string;
+  game_type: string;
+  source: string | null;
+  event_status: string;
+  event_format: string;
+  event_type: string;
+  pairing_system: string | null;
+  rules_enforcement_level: string;
+  coordinates: Coordinates;
+  timezone: string | null;
+  event_address_override: string;
+  event_is_online: boolean;
+  latitude: number;
+  longitude: number;
+  cost_in_cents: number;
+  currency: string;
+  capacity: number;
+  url: string | null;
+  number_of_rc_invites: number | null;
+  top_cut_size: number | null;
+  number_of_rounds: number | null;
+  number_of_days: number;
+  is_headlining_event: boolean;
+  is_on_demand: boolean;
+  prevent_sync: boolean;
+  header_image: string | null;
+  starting_table_number: number;
+  ending_table_number: number | null;
+  admin_list_display_order: number;
+  prizes_awarded: boolean;
+  is_test_event: boolean;
+  is_template: boolean;
+  tax_enabled: boolean;
+  polymorphic_ctype: number;
+  created_at: string;
+  updated_at: string;
+  created_by: number;
+  updated_by: number;
+  game: number;
+  product_list: string | null;
+  event_factory_created_by: string | null;
+  event_configuration_template: string;
+  banner_image: number;
+  phase_template_group: string;
+  game_rules_enforcement_level: string | null;
+  registration_prerequisite_requires_invitation: boolean;
+  store: Store;
+  convention: string | null;
+  gameplay_format: GameplayFormat;
+  distance_in_miles: number | null;
+  display_status: string;
+  prize_manifest: string | null;
+  tiebreakers: string[];
+}
