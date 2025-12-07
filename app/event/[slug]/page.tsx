@@ -75,6 +75,12 @@ const EventPage = () => {
                       timeZone: 'UTC'
                     })}
                   </p>
+                  <p className="text-gray-400 text-xs md:text-sm mt-1">
+                    {data.store_name}
+                  </p>
+                  <p className="text-gray-400 text-xs md:text-sm mt-1">
+                    {data.full_address}
+                  </p>
                 </div>
               </div>
 
@@ -139,17 +145,19 @@ const EventPage = () => {
               )}
             </div>
 
-            <div className="mt-8 mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  className="block w-full px-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm backdrop-blur-sm transition-all duration-300"
-                  placeholder="Filter by user"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            {matchesData && matchesData.length > 0 && (
+              <div className="mt-8 mb-6">
+                <div className="relative">
+                  <input
+                    type="text"
+                    className="block w-full px-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm backdrop-blur-sm transition-all duration-300"
+                    placeholder="Filter by user"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <div>
               {matchesData && matchesData.length > 0 && (

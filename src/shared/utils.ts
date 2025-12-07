@@ -117,7 +117,7 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
 // Utility function to format today's date for API URLs
 const getTodayFormatted = () => {
   const date = new Date();
-  date.setHours(date.getHours() - 5);
+  date.setHours(8, 0, 0, 0);
   return date.toISOString().replace(/:/g, '%3A');
 };
 

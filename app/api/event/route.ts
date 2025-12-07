@@ -20,14 +20,17 @@ export const GET = async (request: Request) => {
 
   try {
     const eventData = await fetchEventDetails(eventId);
-    const roundInfo = eventData.tournament_phases[0]?.rounds.map((round: any) => {
-      return {
-        id: round.id,
-        round_number: round.round_number,
-        pairings_status: round.pairings_status,
-        standings_status: round.standings_status,
-        status: round.status,
-      };
+    const roundInfo: any[] = [];
+    eventData.tournament_phases.forEach((tournamentPhase: any) => {
+      tournamentPhase.rounds.forEach((round: any) => {
+        roundInfo.push({
+          id: round.id,
+          round_number: round.round_number,
+          pairings_status: round.pairings_status,
+          standings_status: round.standings_status,
+          status: round.status,
+        });
+      });
     });
 
     const responseData: any = {
@@ -36,6 +39,9 @@ export const GET = async (request: Request) => {
       full_header_image_url: eventData.full_header_image_url,
       start_datetime: eventData.start_datetime,
       rounds: roundInfo,
+      registered_user_count: eventData.registered_user_count,
+      full_address: eventData.event_address_override || eventData.full_address,
+      store_name: eventData.store.name,
     };
 
     return NextResponse.json(responseData);

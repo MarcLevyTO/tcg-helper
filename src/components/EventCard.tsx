@@ -76,12 +76,14 @@ const EventCard = ({ event, activeTab, minimized = false }: { event: Event, acti
         )}
       </div>
       <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 flex gap-2">
-        <a
-          href={`/event/${event.id}`}
-          className="text-center py-2 sm:py-2.5 px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
-        >
-          ⭐
-        </a>
+        {new Date() >= new Date(event.start_datetime) && (
+          <a
+            href={`/event/${event.id}`}
+            className="text-center py-2 sm:py-2.5 px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
+          >
+            DATA
+          </a>
+        )}
         <a
           href={eventUrl}
           target="_blank"
