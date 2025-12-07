@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getRiftboundEventUrl, getRiftboundRoundMatchesUrl } from '@/src/shared/event';
+import { getRiftboundEventUrl, getRiftboundRoundMatchesUrl, getRiftboundRoundStandingsUrl } from '@/src/shared/event';
 
-export async function GET(request: Request) {
+const fetchEventDetails = async (eventId: string): Promise<any> => {
+  const apiUrl = getRiftboundEventUrl(eventId);
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch event details: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+};
+
+export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
   const eventId = searchParams.get('eventId');
 
@@ -9,32 +18,30 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Event ID is required' }, { status: 400 });
   }
 
-  const apiUrl = getRiftboundEventUrl(parseInt(eventId));
-
   try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const swissRoundUrls: string[] = [];
-
-    data.tournament_phases[0].rounds.forEach((round: any) => {
-      swissRoundUrls.push(getRiftboundRoundMatchesUrl(round.id, ''));
-    })
-
-    const roundData = await Promise.all(swissRoundUrls.map((url: string) => fetch(url).then((res) => res.json())));
-    const rounds: Record<string, any> = {};
-
-    roundData.forEach((round: any, index: number) => {
-      rounds[`round${index + 1}`] = round;
-    })
-
-    return NextResponse.json({
-      id: data.id,
-      full_header_image_url: data.full_header_image_url,
-      start_datetime: data.start_datetime,
-      rounds: rounds,
+    const eventData = await fetchEventDetails(eventId);
+    const roundInfo = eventData.tournament_phases[0]?.rounds.map((round: any) => {
+      return {
+        id: round.id,
+        round_number: round.round_number,
+        pairings_status: round.pairings_status,
+        standings_status: round.standings_status,
+        status: round.status,
+      };
     });
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return NextResponse.json({ error: 'Error fetching data' }, { status: 500 });
+
+    const responseData: any = {
+      id: eventData.id,
+      name: eventData.name,
+      full_header_image_url: eventData.full_header_image_url,
+      start_datetime: eventData.start_datetime,
+      rounds: roundInfo,
+    };
+
+    return NextResponse.json(responseData);
+  } catch (error: any) {
+    console.error('Error fetching event data:', error.message);
+    return NextResponse.json({ error: `Error fetching data: ${error.message}` }, { status: 500 });
   }
-}
+};
+
