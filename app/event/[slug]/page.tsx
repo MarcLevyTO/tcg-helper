@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
 import { useEvent } from '@/src/hooks/useEvent';
+import { getEventUrl } from '@/src/shared/utils';
 import Matches from '@/app/event/[slug]/matches';
 import Standings from '@/app/event/[slug]/standings';
 import Spinner from '@/src/components/Spinner';
@@ -79,6 +80,12 @@ const EventPage = () => {
                 <p className="text-gray-400 text-xs md:text-sm mt-1">
                   {data.full_address}
                 </p>
+                <a
+                  href={getEventUrl(data.id, 'riftbound')}
+                  className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg shadow-md border border-blue-500/50 transition-all duration-300 hover:from-blue-600 hover:to-blue-800 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 hover:cursor-pointer"
+                >
+                  Go to Carde.IO Page
+                </a>
               </div>
             </div>
 
@@ -110,7 +117,7 @@ const EventPage = () => {
                       <button
                         onClick={goToPreviousRound}
                         disabled={!canGoToPreviousRound}
-                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
+                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white cursor-pointer"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:-translate-x-0.5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -129,7 +136,7 @@ const EventPage = () => {
                       <button
                         onClick={goToNextRound}
                         disabled={!canGoToNextRound}
-                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
+                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white cursor-pointer"
                       >
                         <span className="text-sm font-semibold tracking-wide hidden md:inline">NEXT</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:translate-x-0.5">
@@ -155,7 +162,7 @@ const EventPage = () => {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-700/50 transition-colors duration-200 text-gray-400 hover:text-gray-200"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-700/50 transition-colors duration-200 text-gray-400 hover:text-gray-200 cursor-pointer"
                     aria-label="Clear search"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
@@ -172,7 +179,7 @@ const EventPage = () => {
             <div className="flex gap-2 bg-gray-800/30 p-2 rounded-lg border border-gray-700/50">
               <button
                 onClick={() => setCurrentTab('matches')}
-                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${currentTab === 'matches'
+                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 cursor-pointer ${currentTab === 'matches'
                   ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10'
                   : 'bg-gray-800/50 text-gray-400 border border-gray-700/30 hover:bg-gray-700/50 hover:text-gray-300'
                   }`}
@@ -181,7 +188,7 @@ const EventPage = () => {
               </button>
               <button
                 onClick={() => setCurrentTab('standings')}
-                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${currentTab === 'standings'
+                className={`flex-1 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 cursor-pointer ${currentTab === 'standings'
                   ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10'
                   : 'bg-gray-800/50 text-gray-400 border border-gray-700/30 hover:bg-gray-700/50 hover:text-gray-300'
                   }`}
