@@ -13,6 +13,7 @@ const EventPage = () => {
   const slug = params.slug as string;
   const { data, isLoading: loading, error } = useEvent(slug);
   const [currentRound, setCurrentRound] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (!data) return;
@@ -21,8 +22,6 @@ const EventPage = () => {
     if (!lastRound) {
       lastRound = data.rounds[data.rounds.length - 1];
     }
-
-    console.log(lastRound);
 
     setCurrentRound(lastRound);
   }, [data]);
@@ -48,106 +47,132 @@ const EventPage = () => {
 
         {data && (
           <div className="space-y-8 animate-fade-in">
-            {/* Event Header */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden shadow-xl flex flex-col md:flex-row">
-              {data.full_header_image_url && (
-                <div className="hidden md:block w-full md:w-1/2 relative bg-black/20">
-                  <img
-                    src={data.full_header_image_url}
-                    alt={data.name}
-                    className="w-full h-full object-contain"
-                  />
+            {/* Event Header & Round Navigation Combined */}
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden shadow-xl flex flex-col">
+              <div className="flex flex-col md:flex-row">
+                {data.full_header_image_url && (
+                  <div className="hidden md:block w-full md:w-1/2 relative bg-black/20">
+                    <img
+                      src={data.full_header_image_url}
+                      alt={data.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
+
+                <div className="p-4 md:p-6 flex flex-col justify-center flex-1 items-center md:items-start text-center md:text-left">
+                  <h1 className="text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 mb-2 drop-shadow-md">
+                    {data.name}
+                  </h1>
+                  <p className="text-blue-400 font-medium flex items-center gap-2 text-sm md:text-base">
+                    {new Date(data.start_datetime).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      timeZone: 'UTC'
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Round Navigation Integrated */}
+              {data.rounds && data.rounds.length > 0 && (
+                <div className="bg-gray-800/30 p-3 border-t border-gray-700/50">
+                  {(() => {
+                    const currentRoundIndex = data.rounds.findIndex(
+                      (round: any) => round.id === currentRound?.id
+                    );
+
+                    const canGoToPreviousRound = currentRoundIndex > 0;
+                    const canGoToNextRound = currentRoundIndex < data.rounds.length - 1;
+
+                    const goToPreviousRound = () => {
+                      if (canGoToPreviousRound) {
+                        setCurrentRound(data.rounds[currentRoundIndex - 1]);
+                      }
+                    };
+
+                    const goToNextRound = () => {
+                      if (canGoToNextRound) {
+                        setCurrentRound(data.rounds[currentRoundIndex + 1]);
+                      }
+                    };
+
+                    return (
+                      <div className="flex justify-between items-center gap-4">
+                        <button
+                          onClick={goToPreviousRound}
+                          disabled={!canGoToPreviousRound}
+                          className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:-translate-x-0.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                          </svg>
+                          <span className="text-sm font-semibold tracking-wide hidden md:inline">PREVIOUS</span>
+                        </button>
+
+                        <div className="flex flex-col items-center">
+                          <h2 className="text-xl md:text-2xl font-bold text-white text-center flex items-center gap-2">
+                            <span className="bg-blue-500/10 text-blue-400 px-4 py-1.5 rounded-lg border border-blue-500/20 font-mono tracking-tight shadow-inner">
+                              {currentRound ? `ROUND ${currentRound.round_number}` : 'No Details'}
+                            </span>
+                          </h2>
+                        </div>
+
+                        <button
+                          onClick={goToNextRound}
+                          disabled={!canGoToNextRound}
+                          className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
+                        >
+                          <span className="text-sm font-semibold tracking-wide hidden md:inline">NEXT</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:translate-x-0.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                          </svg>
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
-
-              <div className="p-6 md:p-8 flex flex-col justify-center flex-1 items-center md:items-start text-center md:text-left">
-                <h1 className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 mb-3 drop-shadow-md">
-                  {data.name}
-                </h1>
-                <p className="text-blue-400 font-medium flex items-center gap-2 text-sm md:text-base">
-                  {new Date(data.start_datetime).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                  })}
-                </p>
-              </div>
             </div>
 
-            {/* Round Navigation */}
-            {data.rounds && data.rounds.length > 0 && (
-              <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/30">
-                {(() => {
-                  const currentRoundIndex = data.rounds.findIndex(
-                    (round: any) => round.id === currentRound?.id
-                  );
-
-                  const canGoToPreviousRound = currentRoundIndex > 0;
-                  const canGoToNextRound = currentRoundIndex < data.rounds.length - 1;
-
-                  const goToPreviousRound = () => {
-                    if (canGoToPreviousRound) {
-                      setCurrentRound(data.rounds[currentRoundIndex - 1]);
-                    }
-                  };
-
-                  const goToNextRound = () => {
-                    if (canGoToNextRound) {
-                      setCurrentRound(data.rounds[currentRoundIndex + 1]);
-                    }
-                  };
-
-                  return (
-                    <div className="flex justify-between items-center gap-4">
-                      <button
-                        onClick={goToPreviousRound}
-                        disabled={!canGoToPreviousRound}
-                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:-translate-x-0.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                        </svg>
-                        <span className="text-sm font-semibold tracking-wide hidden md:inline">PREVIOUS</span>
-                      </button>
-
-                      <div className="flex flex-col items-center">
-                        <h2 className="text-xl md:text-2xl font-bold text-white text-center flex items-center gap-2">
-                          <span className="bg-blue-500/10 text-blue-400 px-4 py-1.5 rounded-lg border border-blue-500/20 font-mono tracking-tight shadow-inner">
-                            {currentRound ? `ROUND ${currentRound.round_number}` : 'No Details'}
-                          </span>
-                        </h2>
-                      </div>
-
-                      <button
-                        onClick={goToNextRound}
-                        disabled={!canGoToNextRound}
-                        className="group flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 border border-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700 hover:border-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/5 active:scale-95 text-gray-300 hover:text-white"
-                      >
-                        <span className="text-sm font-semibold tracking-wide hidden md:inline">NEXT</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:translate-x-0.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                        </svg>
-                      </button>
-                    </div>
-                  );
-                })()}
+            <div className="mt-8 mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  className="block w-full px-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-sm backdrop-blur-sm transition-all duration-300"
+                  placeholder="Filter by user"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-            )}
+            </div>
 
             <div>
               {matchesData && matchesData.length > 0 && (
                 <div className="flex flex-col gap-3">
-                  {matchesData.map((match: any) => {
+                  {matchesData.filter((match: any) => {
+                    if (!searchTerm) return true;
+                    const term = searchTerm.toLowerCase();
+                    const player1 = match.players[0];
+                    const player2 = match.players[1];
+
+                    return (
+                      player1.name.toLowerCase().includes(term) ||
+                      (player1.userName && player1.userName.toLowerCase().includes(term)) ||
+                      (player2 && player2.name.toLowerCase().includes(term)) ||
+                      (player2 && player2.userName && player2.userName.toLowerCase().includes(term))
+                    );
+                  }).map((match: any) => {
                     const player1 = match.players[0];
                     const player2 = match.players[1];
                     const isDraw = match.match_is_intentional_draw || (!match.winning_player && !match.match_is_bye);
 
                     if (match.match_is_bye) {
                       return (
-
                         <div
                           key={match.id}
                           className="bg-green-800/30 backdrop-blur-sm rounded-xl border border-green-700/30 p-0 overflow-hidden hover:bg-green-800/50 hover:border-green-500/30 transition-all duration-300 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-0 md:gap-6 group text-center"
@@ -210,7 +235,7 @@ const EventPage = () => {
                                     : 'bg-gray-900/20 border-white/5'
                                 }`}>
                                 <div className="flex flex-col md:items-start min-w-0">
-                                  <div className="flex flex-wrap items-baseline gap-1 md:gap-2">
+                                  <div className="flex flex-col md:flex-row items-start md:items-baseline gap-0 md:gap-2">
                                     <span className={`font-semibold text-sm md:text-lg truncate max-w-[80px] md:max-w-none transition-colors ${match.winning_player === player1.id
                                       ? 'text-green-400'
                                       : (match.winning_player && match.winning_player !== player1.id)
@@ -222,7 +247,7 @@ const EventPage = () => {
                                       {player1.name}
                                     </span>
                                     {player1.userName && (
-                                      <span className={`text-[10px] md:text-xs font-medium transition-colors hidden md:inline ${match.winning_player === player1.id
+                                      <span className={`text-[10px] md:text-xs font-medium transition-colors ${match.winning_player === player1.id
                                         ? 'text-green-500/70'
                                         : (match.winning_player && match.winning_player !== player1.id)
                                           ? 'text-red-500/70'
@@ -270,7 +295,7 @@ const EventPage = () => {
                                 }`}>
                                 <div className="flex flex-col md:items-end min-w-0">
                                   {player2 ? (
-                                    <div className="flex flex-wrap items-baseline justify-end gap-1 md:gap-2">
+                                    <div className="flex flex-col md:flex-row items-end md:items-baseline md:justify-end gap-0 md:gap-2">
                                       <span className={`font-semibold text-sm md:text-lg truncate max-w-[80px] md:max-w-none transition-colors ${match.winning_player === player2.id
                                         ? 'text-green-400'
                                         : (match.winning_player && match.winning_player !== player2.id)
@@ -282,7 +307,7 @@ const EventPage = () => {
                                         {player2.name}
                                       </span>
                                       {player2.userName && (
-                                        <span className={`text-[10px] md:text-xs font-medium transition-colors hidden md:inline ${match.winning_player === player2.id
+                                        <span className={`text-[10px] md:text-xs font-medium transition-colors ${match.winning_player === player2.id
                                           ? 'text-green-500/70'
                                           : (match.winning_player && match.winning_player !== player2.id)
                                             ? 'text-red-500/70'
@@ -305,6 +330,12 @@ const EventPage = () => {
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {matchesData && matchesData.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <p className="text-gray-500 mt-4 animate-pulse font-medium">No matches found.</p>
                 </div>
               )}
 
@@ -331,9 +362,10 @@ const EventPage = () => {
 
             </div>
           </div>
-        )}
-      </div>
-    </div>
+        )
+        }
+      </div >
+    </div >
   )
 }
 
