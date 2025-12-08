@@ -29,6 +29,11 @@ const EventPage = () => {
     setCurrentRound(lastRound);
   }, [data]);
 
+  useEffect(() => {
+    if (!data) return;
+    document.title = `Event ${data.id} - MarcLevyTO.com`;
+  }, [data]);
+
   return (
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
 
@@ -56,7 +61,7 @@ const EventPage = () => {
                     <img
                       src={data.full_header_image_url}
                       alt={data.name}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 )}
