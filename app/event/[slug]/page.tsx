@@ -38,6 +38,17 @@ const EventPage = () => {
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
 
       <div className="container mx-auto px-2 md:px-4 flex-grow py-6 md:py-8">
+        {/* Back to Events Button */}
+        <a
+          href="/events"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-800/50 border border-gray-700/50 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700/50 hover:border-gray-600 transition-all duration-300 mb-[15px] group cursor-pointer shadow-sm hover:shadow-md"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:-translate-x-1">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          <span className="font-semibold text-sm">Back to Events</span>
+        </a>
+
         {loading && (
           <div className="flex justify-center items-center min-h-[400px]">
             <Spinner />
@@ -87,12 +98,19 @@ const EventPage = () => {
                   <p className="text-gray-400 text-xs md:text-sm mt-1">
                     {data.full_address}
                   </p>
-                  <a
-                    href={getEventUrl(data.id, 'riftbound')}
-                    className="mt-4 px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg shadow-md border border-blue-500/50 transition-all duration-300 hover:from-blue-600 hover:to-blue-800 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 hover:cursor-pointer"
-                  >
-                    Go to Carde.IO Page
-                  </a>
+                  <div className="flex flex-row gap-4 mt-4">
+                    <a
+                      href={getEventUrl(data.id, 'riftbound')}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md border border-blue-500/50 transition-all duration-300 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 cursor-pointer group"
+                    >
+                      <span>View on Carde.IO</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
 
