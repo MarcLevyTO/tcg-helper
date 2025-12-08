@@ -61,7 +61,7 @@ interface TournamentPhase {
   rounds: Round[];
 }
 
-interface TournamentEvent {
+export interface TournamentEvent {
   id: number;
   full_header_image_url: string;
   start_datetime: string;

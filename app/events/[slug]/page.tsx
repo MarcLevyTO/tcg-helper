@@ -5,8 +5,8 @@ import { useParams } from 'next/navigation';
 
 import { useEvent } from '@/src/hooks/useEvent';
 import { getEventUrl } from '@/src/utils/url';
-import Matches from '@/app/event/[slug]/matches';
-import Standings from '@/app/event/[slug]/standings';
+import Matches from '@/app/events/[slug]/matches';
+import Standings from '@/app/events/[slug]/standings';
 import Spinner from '@/src/components/Spinner';
 
 const EventPage = () => {

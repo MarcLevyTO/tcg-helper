@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
-import { getGoogleMapsUrl, ensureHttps } from '@/src/utils/utils';
+import { getGoogleMapsUrl } from '@/src/utils/url';
+import { ensureHttps } from '@/src/utils/utils';
 import { getWebsite } from '@/src/utils/stores';
 
 import { useHeader } from '@/src/hooks/useHeader';

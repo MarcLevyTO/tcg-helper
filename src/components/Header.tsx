@@ -8,7 +8,7 @@ import { useNotifications } from '@/src/hooks/useNotifications';
 import LocationIcon from '@/src/icons/location.svg';
 
 const Header = ({ type }: { type: 'events' | 'stores' }) => {
-  const { 
+  const {
     showNotification,
     notificationMessage,
     saveShowNotification,
@@ -49,7 +49,7 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
         saveNotificationMessage('Using current location');
         setTimeout(() => saveShowNotification(false), 3000);
       },
-      (error) => {
+      () => {
         saveNotificationMessage('Unable to retrieve your location');
         setTimeout(() => saveShowNotification(false), 3000);
       }
@@ -59,11 +59,11 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalFilter(value);
-    
+
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
-    
+
     debounceTimer.current = setTimeout(() => {
       if (type === 'events') {
         saveEventNameFilter(value);
@@ -79,7 +79,7 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
       saveEventNameFilter('');
     } else {
       saveStoreNameFilter('');
-    } 
+    }
     saveActiveTab(tab);
   };
 
@@ -100,11 +100,10 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                   <button
                     key={tab}
                     onClick={() => handleChangeTab(tab)}
-                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
-                      activeTab === tab
-                        ? 'text-blue-400 border-b-2 border-blue-400'
-                        : 'text-gray-400 hover:text-gray-300'
-                    }`}
+                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${activeTab === tab
+                      ? 'text-blue-400 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-gray-300'
+                      }`}
                   >
                     {tab.toUpperCase()}
                   </button>
@@ -113,29 +112,27 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                 <a
                   key="events"
                   href="/events"
-                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
-                    type === 'events'
-                      ? 'text-blue-400 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-gray-300'
-                  }`}
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${type === 'events'
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                    }`}
                 >
                   EVENTS
                 </a>
                 <a
                   key="stores"
                   href="/stores"
-                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${
-                    type === 'stores'
-                      ? 'text-blue-400 border-b-2 border-blue-400'
-                      : 'text-gray-400 hover:text-gray-300'
-                  }`}
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${type === 'stores'
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                    }`}
                 >
                   STORES
                 </a>
               </div>
             </div>
           </div>
-          
+
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
             <div className="relative flex-grow">
               <input
@@ -177,10 +174,10 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                   <option value="30" className="bg-gray-800 text-white">30 miles</option>
                   <option value="40" className="bg-gray-800 text-white">40 miles</option>
                 </select>
-                <svg 
-                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" 
-                  fill="none" 
-                  stroke="white" 
+                <svg
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none"
+                  fill="none"
+                  stroke="white"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -190,12 +187,12 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                 onClick={handleGetLocation}
                 className="h-[40px] sm:h-[50px] px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg flex items-center gap-2 flex-shrink-0 cursor-pointer"
               >
-                <Image 
-                  src={LocationIcon} 
-                  alt="Location" 
-                  width={20} 
-                  height={20} 
-                  className="brightness-0 invert sm:w-6 sm:h-6" 
+                <Image
+                  src={LocationIcon}
+                  alt="Location"
+                  width={20}
+                  height={20}
+                  className="brightness-0 invert sm:w-6 sm:h-6"
                 />
               </button>
             </div>
