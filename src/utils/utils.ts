@@ -11,7 +11,7 @@ export const generateCalendarLinks = (event: any) => {
     title: event.name,
     start: new Date(event.start_datetime).toISOString(),
     end: new Date(new Date(event.start_datetime).getTime() + 3 * 60 * 60 * 1000).toISOString(),
-    description: `Event at ${event.store?.name || 'Unknown Location'}`,
+    description: event.description,
     location: `${event.store.name} ${event.store.full_address}`,
     url: event.game_type === 'RIFTBOUND' ? `https://locator.riftbound.uvsgames.com/events/${event.id}/` : `https://tcg.ravensburgerplay.com/events/${event.id}/`
   };
