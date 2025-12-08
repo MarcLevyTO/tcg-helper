@@ -1,12 +1,14 @@
 import { Event } from '@/src/types';
 import {
-  getGoogleMapsUrl,
-  getEventUrl,
   formatCost,
   ensureHttps,
   registrationString,
-} from '@/src/shared/utils';
-import { getWebsite } from '@/src/shared/stores';
+} from '@/src/utils/utils';
+import {
+  getEventUrl,
+  getGoogleMapsUrl,
+} from '@/src/utils/url';
+import { getWebsite } from '@/src/utils/stores';
 import CalendarDropdown from '@/src/components/CalendarDropdown';
 
 const EventCard = ({ event, activeTab, minimized = false }: { event: Event, activeTab: 'riftbound' | 'lorcana', minimized?: boolean }) => {

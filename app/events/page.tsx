@@ -3,7 +3,7 @@
 import { useHeader } from '@/src/hooks/useHeader';
 import { useEvents } from '@/src/hooks/useEvents';
 
-import { groupEventsByWeekByDay } from '@/src/shared/utils';
+import { groupEventsByWeekByDay } from '@/src/utils/utils';
 
 import Header from '@/src/components/Header';
 import Spinner from '@/src/components/Spinner';
@@ -12,8 +12,8 @@ import EventCard from '@/src/components/EventCard';
 const Events = () => {
   const { activeTab, latitude, longitude, eventDistance, eventNameFilter } = useHeader();
   const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, eventDistance, activeTab);
-  
-  const filteredData = data.filter((event: any) => 
+
+  const filteredData = data.filter((event: any) =>
     event.name.toLowerCase().includes(eventNameFilter.toLowerCase())
   );
 
@@ -44,9 +44,9 @@ const Events = () => {
                   {daysInWeek.map(([dayStart, events]: [string, any[]]) => (
                     <div key={dayStart} className="space-y-3 sm:space-y-4">
                       <h3 className="sticky top-[158px] z-[5] bg-gray-900 text-lg sm:text-xl font-semibold text-gray-200 py-2 sm:py-3 border-b border-gray-700/50 w-screen ml-[calc(-50vw+50%)] text-center">
-                        {new Date(dayStart).toLocaleDateString('en-US', { 
-                          weekday: 'long', 
-                          month: 'long', 
+                        {new Date(dayStart).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'long',
                           day: 'numeric'
                         })}
                       </h3>

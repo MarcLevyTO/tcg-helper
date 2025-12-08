@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRoundStandingsUrl } from '@/src/shared/event';
+import { getRoundStandingsUrl } from '@/src/utils/url';
 
 const processStanding = (standing: any): any => {
   return {

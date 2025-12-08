@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getEventsAPIUrl, getEventsForStoreAPIUrl } from '@/src/shared/utils';
+import { getEventsAPIUrl, getEventsForStoreAPIUrl } from '@/src/utils/url';
 import { DEFAULT_GAME, DEFAULT_COORDINATES, DEFAULT_DISTANCE } from '@/src/constants';
 
 export async function GET(request: Request) {
@@ -8,14 +8,15 @@ export async function GET(request: Request) {
   const game = searchParams.get('game') ?? DEFAULT_GAME;
   const latitude = searchParams.get('latitude') ?? DEFAULT_COORDINATES.LATITUDE;
   const longitude = searchParams.get('longitude') ?? DEFAULT_COORDINATES.LONGITUDE;
+  const date = searchParams.get('date') ?? new Date().toISOString().replace(/:/g, '%3A');
   const distance = searchParams.get('distance') ?? DEFAULT_DISTANCE;
   const storeId = searchParams.get('storeId');
 
   let apiUrl;
   if (storeId) {
-    apiUrl = getEventsForStoreAPIUrl(game as 'riftbound' | 'lorcana', storeId);
+    apiUrl = getEventsForStoreAPIUrl(game as 'riftbound' | 'lorcana', storeId, date);
   } else {
-    apiUrl = getEventsAPIUrl(game as 'riftbound' | 'lorcana', latitude, longitude, distance);
+    apiUrl = getEventsAPIUrl(game as 'riftbound' | 'lorcana', latitude, longitude, distance, date);
   }
 
   try {

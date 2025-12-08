@@ -1,6 +1,10 @@
 import { google, outlook, office365, yahoo, ics } from 'calendar-link';
 
-const PAGE_SIZE = 500;
+export const getTodayFormatted = () => {
+  const date = new Date();
+  date.setHours(8, 0, 0, 0);
+  return date.toISOString().replace(/:/g, '%3A');
+};
 
 export const generateCalendarLinks = (event: any) => {
   const calendarEvent = {
@@ -21,11 +25,6 @@ export const generateCalendarLinks = (event: any) => {
   };
 };
 
-// Keep the old function for backward compatibility
-export const generateICS = (event: any) => {
-  return generateCalendarLinks(event).ics;
-};
-
 export const groupEventsByWeek = (events: any[]) => {
   const weeks: { [key: string]: any[] } = {};
   events.forEach((event) => {
@@ -41,7 +40,6 @@ export const groupEventsByWeek = (events: any[]) => {
   return weeks;
 };
 
-// Groups events by day, returning a sorted array of [date, events] pairs
 export const groupEventsByDay = (events: any[]) => {
   const grouped = new Map();
 
@@ -60,7 +58,6 @@ export const groupEventsByDay = (events: any[]) => {
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
 };
 
-// Calculate distance between two coordinates using Haversine formula
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 3959; // Earth's radius in miles
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -73,7 +70,6 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-// Groups events by week, then by day within each week
 export const groupEventsByWeekByDay = (events: any[], latitude: string, longitude: string) => {
   const userLat = parseFloat(latitude);
   const userLon = parseFloat(longitude);
@@ -94,7 +90,6 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
     grouped.get(key).push(event);
   });
 
-  // Group each week's events by day, then sort by distance
   return Array.from(grouped)
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
     .map(([weekStart, weekEvents]) => {
@@ -112,60 +107,6 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
 
       return [weekStart, sortedDayGroups];
     });
-};
-
-// Utility function to format today's date for API URLs
-const getTodayFormatted = () => {
-  const date = new Date();
-  date.setHours(8, 0, 0, 0);
-  return date.toISOString().replace(/:/g, '%3A');
-};
-
-export const getEventsAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
-  const today = getTodayFormatted();
-  if (game === 'riftbound') {
-    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
-  } else {
-    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
-  }
-}
-
-export const getEventsForStoreAPIUrl = (game: 'riftbound' | 'lorcana', storeId: string) => {
-  const today = getTodayFormatted();
-  if (game === 'riftbound') {
-    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&store_id=${storeId}&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
-  } else {
-    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=all&store_id=${storeId}&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
-  }
-}
-
-export const getStoresAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
-  if (game === 'riftbound') {
-    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/game-stores/?latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_id=3&page=1&page_size=${PAGE_SIZE}`;
-  } else {
-    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/game-stores/?latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_id=1&page=1&page_size=${PAGE_SIZE}`;
-  }
-}
-
-export const getStoreLink = (game: 'riftbound' | 'lorcana', storeId: number) => {
-  const today = getTodayFormatted();
-  if (game === 'riftbound') {
-    return `https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=riftbound&page=1&page_size=${PAGE_SIZE}`;
-  } else {
-    return `https://api.cloudflare.ravensburgerplay.com/hydraproxy/api/v2/events/?start_date_after=${today}&display_status=upcoming&store_id=${storeId}&upcoming_only=true&game_slug=disney-lorcana&page=1&page_size=${PAGE_SIZE}`;
-  }
-}
-
-export const getGoogleMapsUrl = (store: any) => {
-  const query = encodeURIComponent(`${store.name} ${store.full_address}`);
-  return `https://www.google.com/maps/search/?api=1&query=${query}`;
-};
-
-export const getEventUrl = (eventId: string | number, activeTab: string) => {
-  const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
-  const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
-  const baseUrl = activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL;
-  return `${baseUrl}${eventId}`;
 };
 
 export const formatCost = (cents: number | undefined, currency: string = 'USD') => {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRoundMatchesUrl } from '@/src/shared/event';
+import { getRoundMatchesUrl } from '@/src/utils/url';
 
 const processPlayer = (playerRelationship: any): any => {
   return {
@@ -36,7 +36,7 @@ export const GET = async (request: Request) => {
   }
 
   try {
-    const response = await fetch(getRoundMatchesUrl(roundId));
+    const response = await fetch(getRoundMatchesUrl(roundId, undefined, undefined));
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));

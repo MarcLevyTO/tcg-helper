@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-import { getGoogleMapsUrl, ensureHttps } from '@/src/shared/utils';
-import { getWebsite } from '@/src/shared/stores';
+import { getGoogleMapsUrl, ensureHttps } from '@/src/utils/utils';
+import { getWebsite } from '@/src/utils/stores';
 
 import { useHeader } from '@/src/hooks/useHeader';
 import { useStores } from '@/src/hooks/useStores';

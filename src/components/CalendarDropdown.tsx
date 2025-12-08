@@ -1,7 +1,7 @@
 'use client';
 
 import { Event } from '@/src/types';
-import { generateCalendarLinks } from '@/src/shared/utils';
+import { generateCalendarLinks } from '@/src/utils/utils';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
