@@ -121,10 +121,6 @@ const getTodayFormatted = () => {
   return date.toISOString().replace(/:/g, '%3A');
 };
 
-export const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
-export const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
-
-
 export const getEventsAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {
   const today = getTodayFormatted();
   if (game === 'riftbound') {
@@ -166,6 +162,8 @@ export const getGoogleMapsUrl = (store: any) => {
 };
 
 export const getEventUrl = (eventId: string | number, activeTab: string) => {
+  const RIFTBOUND_EVENTS_URL = 'https://locator.riftbound.uvsgames.com/events/';
+  const LORCANA_EVENTS_URL = 'https://tcg.ravensburgerplay.com/events/';
   const baseUrl = activeTab === 'riftbound' ? RIFTBOUND_EVENTS_URL : LORCANA_EVENTS_URL;
   return `${baseUrl}${eventId}`;
 };

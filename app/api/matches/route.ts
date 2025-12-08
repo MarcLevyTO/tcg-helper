@@ -27,45 +27,6 @@ const processMatch = (match: any): any => {
   };
 };
 
-// const fetchAndProcessRoundMatches = async (roundId: string): Promise<any> => {
-//   const roundMatchesUrl = getRoundMatchesUrl(roundId, '');
-//   const response = await fetch(roundMatchesUrl);
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch round matches for round ${roundId}: ${response.status} ${response.statusText}`);
-//   }
-//   const roundData = await response.json();
-//   const matches = roundData.results.map(processMatch);
-//   return {
-//     page_size: roundData.page_size,
-//     count: roundData.count,
-//     total: roundData.total,
-//     next_page_number: roundData.next_page_number,
-//     previous_page_number: roundData.previous_page_number,
-//     matches,
-//   };
-// };
-
-// const fetchAndProcessRoundStandings = async (roundId: string): Promise<any> => {
-//   const roundStandingsUrl = getRoundStandingsUrl(roundId);
-//   const response = await fetch(roundStandingsUrl);
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch round standings for round ${roundId}: ${response.status} ${response.statusText}`);
-//   }
-//   const roundData = await response.json();
-//   console.log(roundData);
-
-//   // const standings = roundData.results.map(processStandings);
-//   // return {
-//   //   page_size: roundData.page_size,
-//   //   count: roundData.count,
-//   //   total: roundData.total,
-//   //   next_page_number: roundData.next_page_number,
-//   //   previous_page_number: roundData.previous_page_number,
-//   //   standings,
-//   // };
-//   return roundData;
-// };
-
 export const GET = async (request: Request) => {
   const { searchParams } = new URL(request.url);
   const roundId = searchParams.get('roundId');

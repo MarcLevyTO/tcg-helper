@@ -93,7 +93,7 @@ const EventPage = () => {
                   </p>
                   <div className="flex flex-row gap-4 mt-4">
                     <a
-                      href={getEventUrl(data.id, 'riftbound')}
+                      href={getEventUrl(data.id, data.game_type.toLowerCase())}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-md border border-blue-500/50 transition-all duration-300 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 cursor-pointer group"

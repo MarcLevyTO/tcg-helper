@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getEventUrl, getRoundMatchesUrl, getRoundStandingsUrl } from '@/src/shared/event';
+import { getEventUrl } from '@/src/shared/event';
 
 const fetchEventDetails = async (eventId: string): Promise<any> => {
   const apiUrl = getEventUrl(eventId);
@@ -42,6 +42,7 @@ export const GET = async (request: Request) => {
       registered_user_count: eventData.registered_user_count,
       full_address: eventData.event_address_override || eventData.full_address,
       store_name: eventData.store.name,
+      game_type: eventData.game_type,
     };
 
     return NextResponse.json(responseData);
