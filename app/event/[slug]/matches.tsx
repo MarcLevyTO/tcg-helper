@@ -21,9 +21,12 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
               (player2 && player2.userName && player2.userName.toLowerCase().includes(term))
             );
           }).map((match: any) => {
+
             const player1 = match.players[0];
             const player2 = match.players[1];
-            const isDraw = match.match_is_intentional_draw || (!match.winning_player && !match.match_is_bye);
+
+            const isDraw = match.match_is_intentional_draw || (match.winning_player === null && match.games_won_by_winner === 1 && match.games_won_by_loser === 1);
+            const hasScore = match.winning_player !== null
 
             if (match.match_is_bye) {
               return (
@@ -85,17 +88,17 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                         : (match.winning_player && match.winning_player !== player1.id)
                           ? 'bg-red-900/10 border-red-500/20 shadow-[inset_0_0_15px_rgba(239,68,68,0.05)]'
                           : isDraw
-                            ? 'bg-gray-800/40 border-gray-600/30'
+                            ? 'bg-amber-500/10 border-amber-500/20'
                             : 'bg-gray-900/20 border-white/5'
                         }`}>
                         <div className="flex flex-col md:items-start min-w-0">
-                          <div className="flex flex-col md:flex-row items-start md:items-baseline gap-0 md:gap-2">
-                            <span className={`font-semibold text-sm md:text-lg truncate max-w-[80px] md:max-w-none transition-colors ${match.winning_player === player1.id
+                          <div className="flex flex-col items-start gap-0">
+                            <span className={`font-semibold text-sm md:text-lg md:truncate md:max-w-none transition-colors ${match.winning_player === player1.id
                               ? 'text-green-400'
                               : (match.winning_player && match.winning_player !== player1.id)
                                 ? 'text-red-400'
                                 : isDraw
-                                  ? 'text-gray-300'
+                                  ? 'text-amber-400'
                                   : 'text-gray-200 group-hover:text-white'
                               }`}>
                               {player1.name}
@@ -106,7 +109,7 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                                 : (match.winning_player && match.winning_player !== player1.id)
                                   ? 'text-red-500/70'
                                   : isDraw
-                                    ? 'text-gray-500'
+                                    ? 'text-amber-500/70'
                                     : 'text-gray-500 group-hover:text-gray-400'
                                 }`}>@{player1.userName}</span>
                             )}
@@ -116,7 +119,12 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
 
                       {/* VS / Score - Center */}
                       <div className="flex items-center justify-center py-0">
-                        {match.games_won_by_winner !== undefined && !match.match_is_bye && !isDraw ? (
+                        {!hasScore && !isDraw && (
+                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800/80 border border-gray-700/80 flex items-center justify-center shadow-lg">
+                            <span className="text-gray-500 font-bold text-[8px] md:text-[10px] uppercase tracking-widest">vs</span>
+                          </div>
+                        )}
+                        {hasScore && !isDraw && (
                           <div className="bg-gray-950/80 px-2 md:px-5 py-1 md:py-2 rounded-xl border border-gray-700/50 flex gap-2 md:gap-4 font-mono font-bold text-lg md:text-2xl shadow-inner relative overflow-hidden group/score">
                             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                             <span className={match.winning_player === player1.id ? 'text-green-400 drop-shadow-[0_0_12px_rgba(74,222,128,0.4)]' : 'text-red-400 opacity-60'}>
@@ -127,13 +135,11 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                               {match.winning_player === player2?.id ? match.games_won_by_winner : match.games_won_by_loser}
                             </span>
                           </div>
-                        ) : isDraw ? (
-                          <div className="bg-gray-800/80 px-2 md:px-4 py-1 md:py-1.5 rounded-lg border border-gray-600/30 font-bold text-gray-400 text-xs md:text-sm tracking-wide">
-                            DRAW
-                          </div>
-                        ) : (
-                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800/80 border border-gray-700/80 flex items-center justify-center shadow-lg">
-                            <span className="text-gray-500 font-bold text-[8px] md:text-[10px] uppercase tracking-widest">vs</span>
+                        )}
+                        {isDraw && (
+                          <div className="bg-amber-500/10 px-3 py-1 md:px-5 md:py-2 rounded-xl border border-amber-500/20 flex items-center justify-center font-mono font-bold text-sm md:text-lg shadow-inner relative overflow-hidden group/score">
+                            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+                            <span className="text-amber-400 uppercase tracking-wide drop-shadow-[0_0_8px_rgba(252,211,77,0.2)]">Draw</span>
                           </div>
                         )}
                       </div>
@@ -144,18 +150,18 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                         : player2 && (match.winning_player && match.winning_player !== player2.id)
                           ? 'bg-red-900/10 border-red-500/20 shadow-[inset_0_0_15px_rgba(239,68,68,0.05)]'
                           : isDraw
-                            ? 'bg-gray-800/40 border-gray-600/30'
+                            ? 'bg-amber-500/10 border-amber-500/20'
                             : 'bg-gray-900/20 border-white/5'
                         }`}>
                         <div className="flex flex-col md:items-end min-w-0">
                           {player2 ? (
-                            <div className="flex flex-col md:flex-row items-end md:items-baseline md:justify-end gap-0 md:gap-2">
-                              <span className={`font-semibold text-sm md:text-lg truncate max-w-[80px] md:max-w-none transition-colors ${match.winning_player === player2.id
+                            <div className="flex flex-col items-end gap-0">
+                              <span className={`font-semibold text-sm md:text-lg md:truncate md:max-w-none transition-colors ${match.winning_player === player2.id
                                 ? 'text-green-400'
                                 : (match.winning_player && match.winning_player !== player2.id)
                                   ? 'text-red-400'
                                   : isDraw
-                                    ? 'text-gray-300'
+                                    ? 'text-amber-400'
                                     : 'text-gray-200 group-hover:text-white'
                                 }`}>
                                 {player2.name}
@@ -166,7 +172,7 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                                   : (match.winning_player && match.winning_player !== player2.id)
                                     ? 'text-red-500/70'
                                     : isDraw
-                                      ? 'text-gray-500'
+                                      ? 'text-amber-500/70'
                                       : 'text-gray-500 group-hover:text-gray-400'
                                   }`}>@{player2.userName}</span>
                               )}
