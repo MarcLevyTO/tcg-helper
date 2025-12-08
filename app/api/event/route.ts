@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getRiftboundEventUrl, getRiftboundRoundMatchesUrl, getRiftboundRoundStandingsUrl } from '@/src/shared/event';
+import { getEventUrl, getRoundMatchesUrl, getRoundStandingsUrl } from '@/src/shared/event';
 
 const fetchEventDetails = async (eventId: string): Promise<any> => {
-  const apiUrl = getRiftboundEventUrl(eventId);
+  const apiUrl = getEventUrl(eventId);
   const response = await fetch(apiUrl);
   if (!response.ok) {
     throw new Error(`Failed to fetch event details: ${response.status} ${response.statusText}`);

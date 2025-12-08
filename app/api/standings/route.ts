@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRiftboundRoundStandingsUrl } from '@/src/shared/event';
+import { getRoundStandingsUrl } from '@/src/shared/event';
 
 const processStanding = (standing: any): any => {
   return {
@@ -28,7 +28,7 @@ export const GET = async (request: Request) => {
   }
 
   try {
-    const response = await fetch(getRiftboundRoundStandingsUrl(roundId));
+    const response = await fetch(getRoundStandingsUrl(roundId));
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));

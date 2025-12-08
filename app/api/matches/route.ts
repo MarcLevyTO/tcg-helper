@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getRiftboundRoundMatchesUrl } from '@/src/shared/event';
+import { getRoundMatchesUrl } from '@/src/shared/event';
 
 const processPlayer = (playerRelationship: any): any => {
   return {
@@ -28,7 +28,7 @@ const processMatch = (match: any): any => {
 };
 
 // const fetchAndProcessRoundMatches = async (roundId: string): Promise<any> => {
-//   const roundMatchesUrl = getRiftboundRoundMatchesUrl(roundId, '');
+//   const roundMatchesUrl = getRoundMatchesUrl(roundId, '');
 //   const response = await fetch(roundMatchesUrl);
 //   if (!response.ok) {
 //     throw new Error(`Failed to fetch round matches for round ${roundId}: ${response.status} ${response.statusText}`);
@@ -46,7 +46,7 @@ const processMatch = (match: any): any => {
 // };
 
 // const fetchAndProcessRoundStandings = async (roundId: string): Promise<any> => {
-//   const roundStandingsUrl = getRiftboundRoundStandingsUrl(roundId);
+//   const roundStandingsUrl = getRoundStandingsUrl(roundId);
 //   const response = await fetch(roundStandingsUrl);
 //   if (!response.ok) {
 //     throw new Error(`Failed to fetch round standings for round ${roundId}: ${response.status} ${response.statusText}`);
@@ -75,7 +75,7 @@ export const GET = async (request: Request) => {
   }
 
   try {
-    const response = await fetch(getRiftboundRoundMatchesUrl(roundId));
+    const response = await fetch(getRoundMatchesUrl(roundId));
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
