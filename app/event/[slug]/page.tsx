@@ -15,23 +15,16 @@ const EventPage = () => {
   const { data, isLoading: loading, error } = useEvent(slug);
   const [currentRound, setCurrentRound] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
-
   const [currentTab, setCurrentTab] = useState('matches');
 
   useEffect(() => {
     if (!data) return;
-
+    document.title = `Event ${data.id} - MarcLevyTO.com`;
     let lastRound = data.rounds.find((round: any) => round.status === 'IN_PROGRESS');
     if (!lastRound) {
       lastRound = data.rounds[data.rounds.length - 1];
     }
-
     setCurrentRound(lastRound);
-  }, [data]);
-
-  useEffect(() => {
-    if (!data) return;
-    document.title = `Event ${data.id} - MarcLevyTO.com`;
   }, [data]);
 
   return (
