@@ -19,6 +19,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-redux": "^9.2.0",
+    "sass": "^1.95.0",
     "tsx": "^4.20.6"
   },
   "devDependencies": {
