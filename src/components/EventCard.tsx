@@ -47,10 +47,10 @@ const EventCard = ({ event, activeTab, minimized = false, isPastEvent = false }:
         <div>
           <p className="font-semibold text-gray-200 text-xs sm:text-sm line-clamp-2 break-words">{event.name}</p>
         </div>
-        <div className="flex flex-col gap-2.5">
+        {!isPastEvent && <div className="flex flex-col gap-2.5">
           <p className="font-semibold text-red-400 text-xs sm:text-sm">MAX {event.capacity} PLAYERS</p>
           <p className="font-semibold text-red-400 text-xs sm:text-sm">{registrationString(event)}</p>
-        </div>
+        </div>}
         {!minimized && event.store && (
           <div className="border-t border-gray-700/50 pt-2.5 flex flex-col gap-2.5">
             {getWebsite(event.store.id, activeTab) || event.store.website ? (
@@ -83,7 +83,9 @@ const EventCard = ({ event, activeTab, minimized = false, isPastEvent = false }:
             href={`/events/${event.id}`}
             className="flex-1 text-center py-2 sm:py-2.5 px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
           >
-            DATA
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" enableBackground="new 0 0 128 128" xmlSpace="preserve" width="100%" height="20px">
+              <path fill="currentColor" d="M122.465 12.122H5.535A5.53 5.53 0 0 0 0 17.657v80.26a5.53 5.53 0 0 0 5.535 5.535h43.918l-.692 4.359s-.242 2.647-2.647 4.411c-2.387 1.764-4.29 3.286-2.387 3.546 1.816.242 19.01.017 20.272 0 1.28.017 18.456.242 20.29 0 1.885-.259-.017-1.782-2.404-3.546-2.404-1.764-2.647-4.411-2.647-4.411l-.675-4.359h43.901a5.53 5.53 0 0 0 5.535-5.535v-80.26a5.528 5.528 0 0 0-5.534-5.535zm-2.768 74.724H8.303V20.424h111.395v66.422zM26.294 58.468h11.069v20.758H26.294V58.468zm23.524-6.227h11.071v26.985H49.818V52.241zM71.96 48.09h11.07v31.136H71.96V48.09zm20.756-7.957h11.071v39.093H92.716V40.133z" />
+            </svg>
           </a>
         )}
         <a

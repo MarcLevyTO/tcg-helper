@@ -157,7 +157,7 @@ const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPa
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder={type === 'events' ? 'Filter by event name...' : 'Filter by store name...'}
+                placeholder={type === 'events' ? 'Filter by event or store name...' : 'Filter by store name...'}
                 value={localFilter}
                 onChange={handleInputChange}
                 className="w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 bg-gray-700 text-white border border-gray-600 rounded-lg font-medium transition-colors placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-sm sm:text-base"

@@ -17,7 +17,7 @@ const Events = () => {
   }, [showPastEvents]);
 
   const filteredData = data.filter((event: any) =>
-    event.name.toLowerCase().includes(eventNameFilter.toLowerCase())
+    event.name.toLowerCase().includes(eventNameFilter.toLowerCase()) || event.store.name.toLowerCase().includes(eventNameFilter.toLowerCase())
   );
 
   return (

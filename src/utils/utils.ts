@@ -2,7 +2,8 @@ import { google, outlook, office365, yahoo, ics } from 'calendar-link';
 
 export const getTodayFormatted = () => {
   const date = new Date();
-  date.setHours(8, 0, 0, 0);
+  // without this line, the date is constantly changing forcing data to be reloading infinitely
+  date.setHours(date.getHours(), 0, 0, 0);
   return date.toISOString().replace(/:/g, '%3A');
 };
 
