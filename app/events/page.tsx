@@ -10,8 +10,8 @@ import Spinner from '@/src/components/Spinner';
 import EventCard from '@/src/components/EventCard';
 
 const Events = () => {
-  const { activeTab, latitude, longitude, eventDistance, eventNameFilter } = useHeader();
-  const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, eventDistance, activeTab);
+  const { activeTab, latitude, longitude, eventDistance, eventNameFilter, showPastEvents } = useHeader();
+  const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, eventDistance, activeTab, showPastEvents);
 
   const filteredData = data.filter((event: any) =>
     event.name.toLowerCase().includes(eventNameFilter.toLowerCase())
@@ -20,7 +20,7 @@ const Events = () => {
   return (
     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col min-h-screen">
       <div className="sticky top-0 z-10">
-        <Header type="events" />
+        <Header type="events" showPastEventsTab />
       </div>
 
       <div className="container mx-auto px-2 sm:px-4 flex-grow">
@@ -38,7 +38,7 @@ const Events = () => {
 
         {filteredData && !loading && !error && (
           <div className="space-y-8 sm:space-y-12 h-full -mx-2 sm:-mx-4">
-            {groupEventsByWeekByDay(filteredData, latitude, longitude).map(([weekStart, daysInWeek]) => (
+            {groupEventsByWeekByDay(filteredData, latitude, longitude, showPastEvents).map(([weekStart, daysInWeek]) => (
               <div key={weekStart} className="space-y-6 sm:space-y-8">
                 <div className="space-y-6 sm:space-y-8">
                   {daysInWeek.map(([dayStart, events]: [string, any[]]) => (

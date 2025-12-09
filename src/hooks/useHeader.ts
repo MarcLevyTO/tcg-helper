@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter } from "@/src/redux/headerSlice";
+import { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter, setShowPastEvents } from "@/src/redux/headerSlice";
 
 export const useHeader = () => {
   const headerData = useSelector((state: any) => state.header);
-  const { activeTab, latitude, longitude, eventDistance, eventNameFilter, storeNameFilter } = headerData;
+  const { activeTab, latitude, longitude, eventDistance, eventNameFilter, storeNameFilter, showPastEvents } = headerData;
   const dispatch = useDispatch();
 
   const saveActiveTab = (tab: 'riftbound' | 'lorcana') => {
@@ -26,6 +26,10 @@ export const useHeader = () => {
     dispatch(setStoreNameFilter(filter));
   };
 
+  const saveShowPastEvents = (showPastEvents: boolean) => {
+    dispatch(setShowPastEvents(showPastEvents));
+  };
+
   return {
     activeTab,
     latitude,
@@ -33,11 +37,12 @@ export const useHeader = () => {
     eventDistance,
     eventNameFilter,
     storeNameFilter,
-
+    showPastEvents,
     saveActiveTab,
     saveLocation,
     saveEventDistance,
     saveEventNameFilter,
     saveStoreNameFilter,
+    saveShowPastEvents,
   }
 };

@@ -9,14 +9,15 @@ export async function GET(request: Request) {
   const latitude = searchParams.get('latitude') ?? DEFAULT_COORDINATES.LATITUDE;
   const longitude = searchParams.get('longitude') ?? DEFAULT_COORDINATES.LONGITUDE;
   const date = searchParams.get('date') ?? new Date().toISOString().replace(/:/g, '%3A');
+  const endDate = searchParams.get('endDate');
   const distance = searchParams.get('distance') ?? DEFAULT_DISTANCE;
   const storeId = searchParams.get('storeId');
 
   let apiUrl;
   if (storeId) {
-    apiUrl = getEventsForStoreAPIUrl(game as 'riftbound' | 'lorcana', storeId, date);
+    apiUrl = getEventsForStoreAPIUrl(game as 'riftbound' | 'lorcana', storeId, date, endDate);
   } else {
-    apiUrl = getEventsAPIUrl(game as 'riftbound' | 'lorcana', latitude, longitude, distance, date);
+    apiUrl = getEventsAPIUrl(game as 'riftbound' | 'lorcana', latitude, longitude, distance, date, endDate);
   }
 
   try {

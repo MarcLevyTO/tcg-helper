@@ -7,7 +7,7 @@ import { useHeader } from '@/src/hooks/useHeader';
 import { useNotifications } from '@/src/hooks/useNotifications';
 import LocationIcon from '@/src/icons/location.svg';
 
-const Header = ({ type }: { type: 'events' | 'stores' }) => {
+const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPastEventsTab?: boolean }) => {
   const {
     showNotification,
     notificationMessage,
@@ -20,11 +20,13 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
     eventNameFilter,
     storeNameFilter,
     eventDistance,
+    showPastEvents,
     saveEventDistance,
     saveActiveTab,
     saveEventNameFilter,
     saveStoreNameFilter,
     saveLocation,
+    saveShowPastEvents,
   } = useHeader();
 
   const [localFilter, setLocalFilter] = useState(type === 'events' ? eventNameFilter : storeNameFilter);
@@ -109,16 +111,34 @@ const Header = ({ type }: { type: 'events' | 'stores' }) => {
                   </button>
                 ))}
                 <div className="flex-grow" />
-                <a
+                <button
                   key="events"
-                  href="/events"
-                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${type === 'events'
+                  onClick={() => {
+                    if (!window.location.href.includes('/events')) {
+                      window.location.href = '/events';
+                    } else {
+                      saveShowPastEvents(false);
+                    }
+                  }}
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${(type === 'events' && !showPastEvents)
                     ? 'text-blue-400 border-b-2 border-blue-400'
                     : 'text-gray-400 hover:text-gray-300'
                     }`}
                 >
                   EVENTS
-                </a>
+                </button>
+                {showPastEventsTab && (
+                  <button
+                    key="past-events"
+                    onClick={() => saveShowPastEvents(true)}
+                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${showPastEvents
+                      ? 'text-blue-400 border-b-2 border-blue-400'
+                      : 'text-gray-400 hover:text-gray-300'
+                      }`}
+                  >
+                    PAST EVENTS
+                  </button>
+                )}
                 <a
                   key="stores"
                   href="/stores"

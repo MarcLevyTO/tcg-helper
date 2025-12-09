@@ -18,14 +18,22 @@ export const getRoundMatchesUrl = (roundId: string, playerName?: string, game?: 
   return url;
 };
 
-export const getEventsAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string, date: string) => {
+export const getEventsAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string, startDate: string, endDate?: string | null) => {
   const gameSlug = game === 'riftbound' ? 'riftbound' : 'disney-lorcana';
-  return `${getBaseUrl(game)}/events/?start_date_after=${date}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=${gameSlug}&page=1&page_size=${DEFAULT_PAGE_SIZE}`;
+  let url = `${getBaseUrl(game)}/events/?start_date_after=${startDate}&display_status=all&latitude=${latitude}&longitude=${longitude}&num_miles=${distance}&game_slug=${gameSlug}&page=1&page_size=${DEFAULT_PAGE_SIZE}`;
+  if (endDate) {
+    url += `&start_date_before=${endDate}`;
+  }
+  return url;
 }
 
-export const getEventsForStoreAPIUrl = (game: 'riftbound' | 'lorcana', storeId: string, date: string) => {
+export const getEventsForStoreAPIUrl = (game: 'riftbound' | 'lorcana', storeId: string, startDate: string, endDate?: string | null) => {
   const gameSlug = game === 'riftbound' ? 'riftbound' : 'disney-lorcana';
-  return `${getBaseUrl(game)}/events/?start_date_after=${date}&display_status=all&store_id=${storeId}&game_slug=${gameSlug}&page=1&page_size=${DEFAULT_PAGE_SIZE}`;
+  let url = `${getBaseUrl(game)}/events/?start_date_after=${startDate}&display_status=all&store_id=${storeId}&game_slug=${gameSlug}&page=1&page_size=${DEFAULT_PAGE_SIZE}`;
+  if (endDate) {
+    url += `&start_date_before=${endDate}`;
+  }
+  return url;
 }
 
 export const getStoresAPIUrl = (game: 'riftbound' | 'lorcana', latitude: string, longitude: string, distance: string) => {

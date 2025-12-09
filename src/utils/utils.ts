@@ -6,6 +6,10 @@ export const getTodayFormatted = () => {
   return date.toISOString().replace(/:/g, '%3A');
 };
 
+export const newDateFormatted = (date: Date) => {
+  return date.toISOString().replace(/:/g, '%3A');
+}
+
 export const generateCalendarLinks = (event: any) => {
   const calendarEvent = {
     title: event.name,
@@ -70,7 +74,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-export const groupEventsByWeekByDay = (events: any[], latitude: string, longitude: string) => {
+export const groupEventsByWeekByDay = (events: any[], latitude: string, longitude: string, showPastEvents: boolean = false) => {
   const userLat = parseFloat(latitude);
   const userLon = parseFloat(longitude);
 
@@ -91,7 +95,12 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
   });
 
   return Array.from(grouped)
-    .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+    .sort((a, b) => {
+      const timeA = new Date(a[0]).getTime();
+      const timeB = new Date(b[0]).getTime();
+      // If showPastEvents is true, reverse the order (newest first)
+      return showPastEvents ? timeB - timeA : timeA - timeB;
+    })
     .map(([weekStart, weekEvents]) => {
       const dayGroups = groupEventsByDay(weekEvents);
 
@@ -105,12 +114,15 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
         return [dayStart, sortedEvents];
       });
 
-      return [weekStart, sortedDayGroups];
+      // If showPastEvents is true, reverse the days within each week
+      const finalDayGroups = showPastEvents ? sortedDayGroups.reverse() : sortedDayGroups;
+
+      return [weekStart, finalDayGroups];
     });
 };
 
 export const formatCost = (cents: number | undefined, currency: string = 'USD') => {
-  if (!cents) return 'Price TBD';
+  if (!cents) return 'TBD';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency

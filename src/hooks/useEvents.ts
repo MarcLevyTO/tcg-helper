@@ -1,12 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTodayFormatted } from '@/src/utils/utils';
+import { getTodayFormatted, newDateFormatted } from '@/src/utils/utils';
 
-export const useEvents = (latitude: string, longitude: string, distance: string, game: string) => {
-  const date = getTodayFormatted();
+export const useEvents = (latitude: string, longitude: string, distance: string, game: string, showPastEvents: boolean) => {
+  let startDate = getTodayFormatted();
+  let endDate = null;
+
+  if (showPastEvents) {
+    startDate = newDateFormatted(new Date(new Date().getFullYear(), 8, 1));
+    endDate = getTodayFormatted();
+  }
+
   return useQuery({
-    queryKey: ['events', game, latitude, longitude, distance, date],
+    queryKey: ['events', game, latitude, longitude, distance, startDate, endDate],
     queryFn: async () => {
-      const apiUrl = (latitude && longitude) ? `/api/events?game=${game}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&date=${date}` : `/api/events?game=${game}&distance=${distance}&date=${date}`;
+      let apiUrl;
+      apiUrl = (latitude && longitude) ? `/api/events?game=${game}&latitude=${latitude}&longitude=${longitude}&distance=${distance}&date=${startDate}` : `/api/events?game=${game}&distance=${distance}&date=${startDate}`;
+      if (endDate) {
+        apiUrl += `&endDate=${endDate}`;
+      }
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch events');

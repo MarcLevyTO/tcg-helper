@@ -13,6 +13,7 @@ const initialState = {
   eventDistance: getEventDistance() || DEFAULT_DISTANCE,
   eventNameFilter: '',
   storeNameFilter: '',
+  showPastEvents: false,
 };
 
 export const headerSlice = createSlice({
@@ -38,9 +39,12 @@ export const headerSlice = createSlice({
     setStoreNameFilter: (state, action) => {
       state.storeNameFilter = action.payload;
     },
+    setShowPastEvents: (state, action) => {
+      state.showPastEvents = action.payload;
+    },
   },
 });
 
-export const { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter } = headerSlice.actions;
+export const { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter, setShowPastEvents } = headerSlice.actions;
 
 export default headerSlice.reducer;
