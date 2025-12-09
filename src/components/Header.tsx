@@ -115,7 +115,7 @@ const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPa
                     key={tab}
                     onClick={() => handleChangeTab(tab)}
                     className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${activeTab === tab
-                      ? 'text-blue-400 border-b-2 border-blue-400'
+                      ? 'text-red-400 border-b-2 border-red-400'
                       : 'text-gray-400 hover:text-gray-300'
                       }`}
                   >
