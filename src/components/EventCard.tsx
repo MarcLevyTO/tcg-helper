@@ -11,7 +11,7 @@ import {
 import { getWebsite } from '@/src/utils/stores';
 import CalendarDropdown from '@/src/components/CalendarDropdown';
 
-const EventCard = ({ event, activeTab, minimized = false }: { event: Event, activeTab: 'riftbound' | 'lorcana', minimized?: boolean }) => {
+const EventCard = ({ event, activeTab, minimized = false, isPastEvent = false }: { event: Event, activeTab: 'riftbound' | 'lorcana', minimized?: boolean, isPastEvent?: boolean }) => {
   const eventUrl = getEventUrl(event.id, activeTab);
 
   return (
@@ -93,7 +93,7 @@ const EventCard = ({ event, activeTab, minimized = false }: { event: Event, acti
           title="View Event Details"
           className="flex-1 text-center py-2 sm:py-2.5 px-3 sm:px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-medium rounded-md hover:from-blue-500 hover:to-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800 shadow-lg shadow-blue-500/20"
         >
-          {formatCost(event.cost_in_cents, event.currency)}
+          {isPastEvent ? 'LINK' : formatCost(event.cost_in_cents, event.currency)}
         </a>
         <CalendarDropdown event={event} />
       </div>

@@ -1,10 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useHeader } from '@/src/hooks/useHeader';
 import { useEvents } from '@/src/hooks/useEvents';
-
 import { groupEventsByWeekByDay } from '@/src/utils/utils';
-
 import Header from '@/src/components/Header';
 import Spinner from '@/src/components/Spinner';
 import EventCard from '@/src/components/EventCard';
@@ -12,6 +11,10 @@ import EventCard from '@/src/components/EventCard';
 const Events = () => {
   const { activeTab, latitude, longitude, eventDistance, eventNameFilter, showPastEvents } = useHeader();
   const { data = [], isLoading: loading, error } = useEvents(latitude, longitude, eventDistance, activeTab, showPastEvents);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [showPastEvents]);
 
   const filteredData = data.filter((event: any) =>
     event.name.toLowerCase().includes(eventNameFilter.toLowerCase())
@@ -52,7 +55,7 @@ const Events = () => {
                       </h3>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 px-2 sm:px-4">
                         {events.map((event: any) => (
-                          <EventCard event={event} activeTab={activeTab} key={event.id} />
+                          <EventCard event={event} activeTab={activeTab} key={event.id} isPastEvent={showPastEvents} />
                         ))}
                       </ul>
                     </div>
