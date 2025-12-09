@@ -5,6 +5,7 @@ import { useLocalStorage } from "@/src/hooks/useLocalStorage";
 const [getLatitude, setLatitude] = useLocalStorage('latitude');
 const [getLongitude, setLongitude] = useLocalStorage('longitude');
 const [getEventDistance, setSavedEventDistance] = useLocalStorage('eventDistance');
+const [, setSavedShowPastEvents] = useLocalStorage('showPastEvents');
 
 const initialState = {
   activeTab: DEFAULT_GAME,
@@ -13,7 +14,7 @@ const initialState = {
   eventDistance: getEventDistance() || DEFAULT_DISTANCE,
   eventNameFilter: '',
   storeNameFilter: '',
-  showPastEvents: false,
+  showPastEvents: false, // Always start false to prevent hydration mismatch
 };
 
 export const headerSlice = createSlice({
@@ -40,6 +41,7 @@ export const headerSlice = createSlice({
       state.storeNameFilter = action.payload;
     },
     setShowPastEvents: (state, action) => {
+      setSavedShowPastEvents(action.payload);
       state.showPastEvents = action.payload;
     },
   },

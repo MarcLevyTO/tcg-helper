@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 
 import { useHeader } from '@/src/hooks/useHeader';
 import { useNotifications } from '@/src/hooks/useNotifications';
+import { useLocalStorage } from '@/src/hooks/useLocalStorage';
 import LocationIcon from '@/src/icons/location.svg';
 
 const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPastEventsTab?: boolean }) => {
@@ -30,7 +31,18 @@ const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPa
   } = useHeader();
 
   const [localFilter, setLocalFilter] = useState(type === 'events' ? eventNameFilter : storeNameFilter);
+  const [showEventsStyle, setShowEventsStyle] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout>(null);
+
+  // Load showPastEvents from localStorage after hydration
+  useEffect(() => {
+    const [getShowPastEvents] = useLocalStorage('showPastEvents');
+    const savedValue = getShowPastEvents();
+    if (savedValue !== null && savedValue !== showPastEvents) {
+      saveShowPastEvents(savedValue);
+    }
+    setShowEventsStyle(true);
+  }, []);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -120,7 +132,7 @@ const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPa
                       saveShowPastEvents(false);
                     }
                   }}
-                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${(type === 'events' && !showPastEvents)
+                  className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${(showEventsStyle && type === 'events' && !showPastEvents)
                     ? 'text-blue-400 border-b-2 border-blue-400'
                     : 'text-gray-400 hover:text-gray-300'
                     }`}
@@ -131,7 +143,7 @@ const Header = ({ type, showPastEventsTab }: { type: 'events' | 'stores'; showPa
                   <button
                     key="past-events"
                     onClick={() => saveShowPastEvents(true)}
-                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${showPastEvents
+                    className={`px-2 sm:px-4 py-2 font-medium transition-colors cursor-pointer text-xs sm:text-base whitespace-nowrap ${showEventsStyle && showPastEvents
                       ? 'text-blue-400 border-b-2 border-blue-400'
                       : 'text-gray-400 hover:text-gray-300'
                       }`}
