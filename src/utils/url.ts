@@ -15,6 +15,9 @@ export const getRoundMatchesUrl = (roundId: string, playerName?: string, game?: 
   if (playerName) {
     url += `&player_name=${playerName}`;
   }
+
+  console.log("URL", url);
+
   return url;
 };
 

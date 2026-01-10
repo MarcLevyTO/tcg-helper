@@ -29,6 +29,38 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
             const isDraw = match.match_is_intentional_draw || (match.winning_player === null && match.games_won_by_winner === 1 && match.games_won_by_loser === 1);
             const hasScore = match.winning_player !== null
 
+            // Add case for table number = -1 or 0, this means a player dropped
+            if ((match.table_number === -1 || match.table_number === 0) && !match.match_is_bye) {
+              return (
+                <div
+                  key={match.id}
+                  className="match-card dropped"
+                >
+                  {/* Mobile Dropped Header */}
+                  <div className="dropped-header-mobile">
+                    <span>DROPPED</span>
+                  </div>
+
+                  {/* Desktop Badge */}
+                  <div className="dropped-badge-desktop">
+                    <span>
+                      DROPPED
+                    </span>
+                  </div>
+
+                  {/* Player Info */}
+                  <div className="dropped-player-info">
+                    <span className="name">
+                      {player1.name}
+                    </span>
+                    {player1.userName && (
+                      <span className="username">(@{player1.userName})</span>
+                    )}
+                  </div>
+                </div>
+              );
+            }
+
             if (match.match_is_bye) {
               return (
                 <div
