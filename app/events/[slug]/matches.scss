@@ -327,38 +327,97 @@
   }
 
   .player-stats {
-    font-size: 0.625rem; // text-[10px]
-    font-weight: 500; // font-medium
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0.25rem; // mt-1
     transition: color 0.3s;
-    margin-top: 0.125rem; // minimal spacing
 
-    @media (min-width: 768px) {
+    .stats-label {
+      font-size: 0.5rem; // text-[8px]
+      font-weight: 600; // font-semibold
+      text-transform: uppercase;
+      letter-spacing: 0.05em; // tracking-wider
+      opacity: 0.7;
+      margin: 0;
+      line-height: 1.2;
+
+      @media (min-width: 768px) {
+        font-size: 0.625rem; // text-[10px]
+      }
+    }
+
+    .stats-value-player1,
+    .stats-value-player2 {
       font-size: 0.75rem; // text-xs
+      font-weight: 700; // font-bold
+      margin: 0;
+      line-height: 1.2;
+
+      @media (min-width: 768px) {
+        font-size: 0.875rem; // text-sm
+      }
+    }
+
+    .stats-value-player1 {
+      text-align: left;
+    }
+
+    .stats-value-player2 {
+      text-align: right;
     }
 
     &.winner-text {
-      color: rgba(34, 197, 94, 0.7);
-    }
+      .stats-label {
+        color: rgba(34, 197, 94, 0.6);
+      }
 
-    // text-green-500/70
+      .stats-value-player1,
+      .stats-value-player2 {
+        color: rgba(34, 197, 94, 0.9);
+      }
+    }
 
     &.loser-text {
-      color: rgba(239, 68, 68, 0.7);
-    }
+      .stats-label {
+        color: rgba(239, 68, 68, 0.6);
+      }
 
-    // text-red-500/70
+      .stats-value-player1,
+      .stats-value-player2 {
+        color: rgba(239, 68, 68, 0.9);
+      }
+    }
 
     &.draw-text {
-      color: rgba(245, 158, 11, 0.7);
-    }
+      .stats-label {
+        color: rgba(245, 158, 11, 0.6);
+      }
 
-    // text-amber-500/70
+      .stats-value-player1,
+      .stats-value-player2 {
+        color: rgba(245, 158, 11, 0.9);
+      }
+    }
 
     &.neutral-text {
-      color: #6b7280;
+      .stats-label {
+        color: #6b7280;
+      }
+
+      .stats-value-player1,
+      .stats-value-player2 {
+        color: #9ca3af;
+      }
     }
 
-    // text-gray-500
+    // Right align for Player 2 container (label needs alignment too implied by "text right aligned" request, but usually labels follow value alignment)
+    // The previous generic right align rule handles the container.
+    // Explicitly reinforcing alignment for the container if needed, but the class specific rules above handle the value.
+    .player-info.align-end & {
+      align-items: flex-end;
+      text-align: right;
+    }
   }
 
   .bye-text {
