@@ -12,12 +12,14 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
     <div>
       {data && data.length > 0 && (
         <>
-          <div
-            className={`matches-remaining ${showRemainingOnly ? 'filter-active' : ''}`}
-            onClick={() => setShowRemainingOnly(!showRemainingOnly)}
-          >
-            Matches remaining: {matchesRemaining} {showRemainingOnly && '(Filtered)'}
-          </div>
+          {matchesRemaining > 0 && (
+            <div
+              className={`matches-remaining ${showRemainingOnly ? 'filter-active' : ''}`}
+              onClick={() => setShowRemainingOnly(!showRemainingOnly)}
+            >
+              Matches remaining: {matchesRemaining} {showRemainingOnly && '(Filtered)'}
+            </div>
+          )}
           <div className="matches-container">
             {data.filter((match: any) => {
               if (showRemainingOnly) {
