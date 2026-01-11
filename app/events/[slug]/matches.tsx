@@ -6,7 +6,7 @@ import './matches.scss';
 const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
   const { data, isLoading, error } = useMatches(round?.id);
   const [showRemainingOnly, setShowRemainingOnly] = useState(false);
-  const matchesRemaining = data?.filter((match: any) => match.games_won_by_winner === null && match.games_won_by_loser === null).length || 0;
+  const matchesRemaining = data?.filter((match: any) => match.games_won_by_winner === null && match.games_won_by_loser === null && match.table_number > 0).length || 0;
 
   return (
     <div>
@@ -21,7 +21,7 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
           <div className="matches-container">
             {data.filter((match: any) => {
               if (showRemainingOnly) {
-                if (match.games_won_by_winner !== null || match.games_won_by_loser !== null) {
+                if (!(match.games_won_by_winner === null && match.games_won_by_loser === null && match.table_number > 0)) {
                   return false;
                 }
               }
