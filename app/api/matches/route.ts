@@ -9,6 +9,10 @@ const processPlayer = (playerRelationship: any): any => {
       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' '),
     userName: playerRelationship.user_event_status.best_identifier,
+    matchesWon: playerRelationship.user_event_status.matches_won,
+    matchesLost: playerRelationship.user_event_status.matches_lost,
+    matchesDrawn: playerRelationship.user_event_status.matches_drawn,
+    totalMatchPoints: playerRelationship.user_event_status.total_match_points,
   };
 };
 

@@ -4,8 +4,6 @@ import { getEventApiUrl } from '@/src/utils/url';
 const fetchEventDetails = async (eventId: string): Promise<any> => {
   const apiUrl = getEventApiUrl(eventId);
 
-  console.log(apiUrl);
-
   const response = await fetch(apiUrl);
   if (!response.ok) {
     throw new Error(`Failed to fetch event details: ${response.status} ${response.statusText}`);

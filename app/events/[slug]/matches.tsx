@@ -22,7 +22,6 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
               (player2 && player2.userName && player2.userName.toLowerCase().includes(term))
             );
           }).map((match: any) => {
-
             const player1 = match.players[0];
             const player2 = match.players[1];
 
@@ -146,6 +145,16 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                                     : 'neutral-text'
                                 }`}>@{player1.userName}</span>
                             )}
+                            <span className={`player-stats ${match.winning_player === player1.id
+                              ? 'winner-text'
+                              : (match.winning_player && match.winning_player !== player1.id)
+                                ? 'loser-text'
+                                : isDraw
+                                  ? 'draw-text'
+                                  : 'neutral-text'
+                              }`}>
+                              {player1.matchesWon} - {player1.matchesLost} - {player1.matchesDrawn} ({player1.totalMatchPoints} points)
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -209,6 +218,16 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                                       : 'neutral-text'
                                   }`}>@{player2.userName}</span>
                               )}
+                              <span className={`player-stats ${match.winning_player === player2.id
+                                ? 'winner-text'
+                                : (match.winning_player && match.winning_player !== player2.id)
+                                  ? 'loser-text'
+                                  : isDraw
+                                    ? 'draw-text'
+                                    : 'neutral-text'
+                                }`}>
+                                {player2.matchesWon} - {player2.matchesLost} - {player2.matchesDrawn} ({player2.totalMatchPoints} points)
+                              </span>
                             </div>
                           ) : (
                             <span className="bye-text">
