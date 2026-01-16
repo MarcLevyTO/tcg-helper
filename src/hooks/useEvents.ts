@@ -6,7 +6,7 @@ export const useEvents = (latitude: string, longitude: string, distance: string,
   let endDate = null;
 
   if (showPastEvents) {
-    startDate = newDateFormatted(new Date(2025, 0, 1));
+    startDate = newDateFormatted(new Date(new Date().getFullYear(), 0, 1));
     endDate = getTodayFormatted();
   }
 
