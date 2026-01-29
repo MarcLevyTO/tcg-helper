@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 import { useEvent } from '@/src/hooks/useEvent';
 import { getEventUrl } from '@/src/utils/url';
@@ -14,18 +15,21 @@ const EventPage = () => {
   const params = useParams();
   const slug = params.slug as string;
   const { data, isLoading: loading, error } = useEvent(slug);
-  const [currentRound, setCurrentRound] = useState<any>(null);
+  const [selectedRoundId, setSelectedRoundId] = useState<string | number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTab, setCurrentTab] = useState('matches');
+
+  const currentRound = useMemo(() => {
+    if (!data || !data.rounds || data.rounds.length === 0) return null;
+    if (selectedRoundId) {
+      return data.rounds.find((r: any) => r.id === selectedRoundId);
+    }
+    return data.rounds.find((r: any) => r.status === 'IN_PROGRESS') || data.rounds[data.rounds.length - 1];
+  }, [data, selectedRoundId]);
 
   useEffect(() => {
     if (!data) return;
     document.title = `Event ${data.id} - MarcLevyTO.com`;
-    let lastRound = data.rounds.find((round: any) => round.status === 'IN_PROGRESS');
-    if (!lastRound) {
-      lastRound = data.rounds[data.rounds.length - 1];
-    }
-    setCurrentRound(lastRound);
   }, [data]);
 
   return (
@@ -33,7 +37,7 @@ const EventPage = () => {
 
       <div className="event-content-wrapper">
         {/* Back to Events Button */}
-        <a
+        <Link
           href="/events"
           className="back-button"
         >
@@ -41,7 +45,7 @@ const EventPage = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           <span>Back to Events</span>
-        </a>
+        </Link>
 
         {loading && (
           <div className="loading-container">
@@ -120,13 +124,13 @@ const EventPage = () => {
 
                     const goToPreviousRound = () => {
                       if (canGoToPreviousRound) {
-                        setCurrentRound(data.rounds[currentRoundIndex - 1]);
+                        setSelectedRoundId(data.rounds[currentRoundIndex - 1].id);
                       }
                     };
 
                     const goToNextRound = () => {
                       if (canGoToNextRound) {
-                        setCurrentRound(data.rounds[currentRoundIndex + 1]);
+                        setSelectedRoundId(data.rounds[currentRoundIndex + 1].id);
                       }
                     };
 

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useMatches } from '@/src/hooks/useMatches';
+import { Round } from '@/src/types/index';
+import { Match } from '@/src/types/match';
 import Spinner from '@/src/components/Spinner';
 import './matches.scss';
 
-const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
+const Matches = ({ round, searchTerm }: { round: Round; searchTerm: string }) => {
   const { data, isLoading, error } = useMatches(round?.id);
   const [showRemainingOnly, setShowRemainingOnly] = useState(false);
-  const matchesRemaining = data?.filter((match: any) => match.games_won_by_winner === null && match.games_won_by_loser === null && match.table_number > 0).length || 0;
+  const matchesRemaining = data?.filter((match: Match) => match.games_won_by_winner === null && match.games_won_by_loser === null && match.table_number > 0).length || 0;
 
   return (
     <div>
@@ -21,7 +23,7 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
             </div>
           )}
           <div className="matches-container">
-            {data.filter((match: any) => {
+            {data.filter((match: Match) => {
 
               // Filter out matches that are not remaining
               if (showRemainingOnly) {
@@ -46,7 +48,7 @@ const Matches = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
                 (player2 && player2.name.toLowerCase().includes(term)) ||
                 (player2 && player2.userName && player2.userName.toLowerCase().includes(term))
               );
-            }).map((match: any) => {
+            }).map((match: Match) => {
               const player1 = match.players[0];
               const player2 = match.players[1];
 

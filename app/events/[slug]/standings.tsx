@@ -1,8 +1,9 @@
 import { useStandings } from '@/src/hooks/useStandings';
+import { Round, Standing } from '@/src/types';
 import Spinner from '@/src/components/Spinner';
 import './standings.scss';
 
-const Standings = ({ round, searchTerm }: { round: any; searchTerm: string }) => {
+const Standings = ({ round, searchTerm }: { round: Round; searchTerm: string }) => {
   const { data, isLoading, error } = useStandings(round?.id);
 
   return (
@@ -21,7 +22,7 @@ const Standings = ({ round, searchTerm }: { round: any; searchTerm: string }) =>
               </tr>
             </thead>
             <tbody>
-              {data.filter((standing: any) => {
+              {data.filter((standing: Standing) => {
                 if (!searchTerm) return true;
                 const term = searchTerm.toLowerCase();
 
@@ -29,7 +30,7 @@ const Standings = ({ round, searchTerm }: { round: any; searchTerm: string }) =>
                   standing.player_name.toLowerCase().includes(term) ||
                   (standing.player_username && standing.player_username.toLowerCase().includes(term))
                 );
-              }).map((standing: any) => (
+              }).map((standing: Standing) => (
                 <tr key={standing.player_id}>
                   <td>
                     <span className="rank-cell">{standing.rank}</span>

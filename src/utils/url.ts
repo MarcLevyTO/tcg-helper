@@ -3,6 +3,7 @@ import {
   DEFAULT_RIFTBOUND_API_URL,
   DEFAULT_LORCANA_API_URL,
 } from '@/src/constants';
+import { Store } from '@/src/types';
 
 const getBaseUrl = (game: 'riftbound' | 'lorcana' = 'riftbound') => game === 'riftbound' ? DEFAULT_RIFTBOUND_API_URL : DEFAULT_LORCANA_API_URL;
 
@@ -45,7 +46,7 @@ export const getEventUrl = (eventId: string | number, activeTab: string) => {
   return `${baseUrl}${eventId}`;
 };
 
-export const getGoogleMapsUrl = (store: any) => {
+export const getGoogleMapsUrl = (store: Store) => {
   const query = encodeURIComponent(`${store.name} ${store.full_address}`);
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 };

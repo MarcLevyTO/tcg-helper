@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface NotificationsState {
+  showNotification: boolean;
+  notificationMessage: string;
+}
+
+const initialState: NotificationsState = {
   showNotification: false,
   notificationMessage: "",
 };

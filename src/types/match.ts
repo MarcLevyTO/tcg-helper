@@ -17,7 +17,17 @@ interface UserEventStatus {
   user: User;
 }
 
-interface Player {
+export interface MatchPlayer {
+  id: number;
+  name: string;
+  userName?: string;
+  matchesWon: number;
+  matchesLost: number;
+  matchesDrawn: number;
+  totalMatchPoints: number;
+}
+
+export interface Player {
   id: number;
   pronouns: string | null;
   country_code: string | null;
@@ -31,7 +41,7 @@ interface PlayerMatchRelationship {
   user_event_status: UserEventStatus;
 }
 
-interface Match {
+export interface Match {
   id: number;
   player_match_relationships: PlayerMatchRelationship[];
   created_at: string;
@@ -58,7 +68,7 @@ interface Match {
   reporting_player: number | null;
   winning_player: number | null;
   assigned_judge: any | null;
-  players: number[];
+  players: MatchPlayer[];
 }
 
 interface TournamentMatchesResponse {

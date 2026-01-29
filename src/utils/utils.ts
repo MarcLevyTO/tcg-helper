@@ -1,4 +1,5 @@
 import { google, outlook, office365, yahoo, ics } from 'calendar-link';
+import { Event } from "@/src/types";
 
 export const getTodayFormatted = () => {
   const date = new Date();
@@ -11,7 +12,7 @@ export const newDateFormatted = (date: Date) => {
   return date.toISOString().replace(/:/g, '%3A');
 }
 
-export const generateCalendarLinks = (event: any) => {
+export const generateCalendarLinks = (event: Event) => {
   const calendarEvent = {
     title: event.name,
     start: new Date(event.start_datetime).toISOString(),
@@ -30,8 +31,8 @@ export const generateCalendarLinks = (event: any) => {
   };
 };
 
-export const groupEventsByWeek = (events: any[]) => {
-  const weeks: { [key: string]: any[] } = {};
+export const groupEventsByWeek = (events: Event[]) => {
+  const weeks: { [key: string]: Event[] } = {};
   events.forEach((event) => {
     const eventDate = new Date(event.start_datetime);
     const monday = new Date(eventDate);
@@ -45,7 +46,7 @@ export const groupEventsByWeek = (events: any[]) => {
   return weeks;
 };
 
-export const groupEventsByDay = (events: any[]) => {
+export const groupEventsByDay = (events: Event[]) => {
   const grouped = new Map();
 
   events.forEach(event => {
@@ -63,7 +64,7 @@ export const groupEventsByDay = (events: any[]) => {
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime());
 };
 
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 3959; // Earth's radius in miles
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -75,7 +76,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-export const groupEventsByWeekByDay = (events: any[], latitude: string, longitude: string, showPastEvents: boolean = false) => {
+export const groupEventsByWeekByDay = (events: Event[], latitude: string, longitude: string, showPastEvents: boolean = false) => {
   const userLat = parseFloat(latitude);
   const userLon = parseFloat(longitude);
 
@@ -107,7 +108,7 @@ export const groupEventsByWeekByDay = (events: any[], latitude: string, longitud
 
       // Sort events within each day by distance
       const sortedDayGroups = dayGroups.map(([dayStart, dayEvents]) => {
-        const sortedEvents = dayEvents.sort((a: any, b: any) => {
+        const sortedEvents = dayEvents.sort((a: Event, b: Event) => {
           const distA = calculateDistance(userLat, userLon, a.store.latitude, a.store.longitude);
           const distB = calculateDistance(userLat, userLon, b.store.latitude, b.store.longitude);
           return distA - distB;
@@ -137,7 +138,7 @@ export const ensureHttps = (url: string) => {
   return url.startsWith('https://') ? url : `https://${url}`;
 };
 
-export const registrationString = (event: any) => {
+export const registrationString = (event: Event) => {
   if (event.settings.event_lifecycle_status === 'REGISTRATION_CLOSED') {
     return 'REGISTRATION PENDING';
   }

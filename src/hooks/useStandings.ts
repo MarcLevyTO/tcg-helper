@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-export const useStandings = (roundId: string) => {
+export const useStandings = (roundId: string | number) => {
   return useQuery({
     queryKey: ['standings', roundId],
     queryFn: async () => {

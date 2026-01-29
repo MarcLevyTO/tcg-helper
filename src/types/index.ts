@@ -1,9 +1,9 @@
-interface Coordinates {
+export interface Coordinates {
   type: string;
   coordinates: [number, number];
 }
 
-interface Store {
+export interface Store {
   id: number;
   name: string;
   full_address: string;
@@ -16,12 +16,12 @@ interface Store {
   email: string;
 }
 
-interface GameplayFormat {
+export interface GameplayFormat {
   id: string;
   name: string;
 }
 
-interface Settings {
+export interface Settings {
   id: number;
   decklist_status: string;
   decklists_on_spicerack: boolean;
@@ -38,11 +38,22 @@ interface Settings {
   enable_waitlist: boolean;
 }
 
-interface Round {
-  // Add properties as needed
+export interface Round {
+  id: string | number; // Assuming id can be string or number based on usage
 }
 
-interface TournamentPhase {
+export interface Standing {
+  player_id: string | number;
+  rank: number;
+  player_name: string;
+  player_username?: string;
+  points: number;
+  match_record: string;
+  opponent_match_win_percentage: number;
+  opponent_game_win_percentage: number;
+}
+
+export interface TournamentPhase {
   id: number;
   phase_name: string;
   phase_description: string;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Store, Event } from '@/src/types';
 
 import { getGoogleMapsUrl } from '@/src/utils/url';
 import { ensureHttps } from '@/src/utils/utils';
@@ -19,8 +20,8 @@ const Events = () => {
   const { activeTab, latitude, longitude, eventDistance, storeNameFilter } = useHeader();
   const { data = [], isLoading: loading, error } = useStores(latitude, longitude, eventDistance, activeTab);
 
-  const [selectedStore, setSelectedStore] = useState<any>(null);
-  const [storeData, setStoreData] = useState<any>(null);
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [storeData, setStoreData] = useState<Store | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -30,11 +31,11 @@ const Events = () => {
     error: storeEventsError
   } = useEventsForStore(selectedStore ? selectedStore.id : null, activeTab);
 
-  const filteredData = data.filter((event: any) =>
+  const filteredData = data.filter((event: Store) =>
     event.name.toLowerCase().includes(storeNameFilter.toLowerCase())
   );
 
-  const handleStoreSelect = (store: any) => {
+  const handleStoreSelect = (store: Store | null) => {
     if (store) {
       setScrollPosition(window.scrollY);
     } else {
@@ -91,7 +92,7 @@ const Events = () => {
         )}
 
         <div className="stores-grid">
-          {filteredData.map((store: any) => {
+          {filteredData.map((store: Store) => {
             const websiteUrl = ensureHttps(getWebsite(store.id, activeTab) || store.website);
             return (
               <div
@@ -204,7 +205,7 @@ const Events = () => {
 
               {storeEventsData && storeEventsData.length > 0 && !storeEventsLoading && !storeEventsError && (
                 <div className="store-events-grid">
-                  {storeEventsData.map((event: any) => (
+                  {storeEventsData.map((event: Event) => (
                     <EventCard event={event} activeTab={activeTab} key={event.id} minimized />
                   ))}
                 </div>

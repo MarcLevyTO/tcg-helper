@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-export const useMatches = (roundId: string) => {
+export const useMatches = (roundId: string | number) => {
   return useQuery({
     queryKey: ['matches', roundId],
     queryFn: async () => {

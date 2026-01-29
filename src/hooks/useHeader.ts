@@ -1,8 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveTab, setLocation, setEventDistance, setEventNameFilter, setStoreNameFilter, setShowPastEvents } from "@/src/redux/headerSlice";
+import { RootState } from "@/src/redux/store";
 
 export const useHeader = () => {
-  const headerData = useSelector((state: any) => state.header);
+  const headerData = useSelector((state: RootState) => state.header);
   const { activeTab, latitude, longitude, eventDistance, eventNameFilter, storeNameFilter, showPastEvents } = headerData;
   const dispatch = useDispatch();
 

@@ -324,3 +324,30 @@
     height: 24px;
   }
 }
+
+.view-mode-btn {
+  // Inherit base button styles or reuse location-button via composition in TSX, 
+  // but here we define the overrides for fixed width/icon only.
+  // Assuming we add this class ALONG WITH location-button in HTML, or duplicate styles.
+  // Since we can't easily modify location-button without making it affect others, 
+  // let's assume we use: className="location-button view-mode-btn"
+
+  display: none; // Hidden on mobile
+  padding: 0 !important; // Override location-button padding
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    display: flex; // Show on desktop/tablet
+    width: 50px;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+
+    @media (min-width: 768px) {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

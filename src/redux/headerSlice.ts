@@ -1,13 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { DEFAULT_GAME, DEFAULT_COORDINATES, DEFAULT_DISTANCE } from "@/src/constants";
-import { useLocalStorage } from "@/src/hooks/useLocalStorage";
+import { createStorageAccessor } from "@/src/utils/storage";
 
-const [getLatitude, setLatitude] = useLocalStorage('latitude');
-const [getLongitude, setLongitude] = useLocalStorage('longitude');
-const [getEventDistance, setSavedEventDistance] = useLocalStorage('eventDistance');
-const [, setSavedShowPastEvents] = useLocalStorage('showPastEvents');
+const [getLatitude, setLatitude] = createStorageAccessor<string>('latitude');
+const [getLongitude, setLongitude] = createStorageAccessor<string>('longitude');
+const [getEventDistance, setSavedEventDistance] = createStorageAccessor<string>('eventDistance');
+const [, setSavedShowPastEvents] = createStorageAccessor<boolean>('showPastEvents');
 
-const initialState = {
+interface HeaderState {
+  activeTab: 'riftbound' | 'lorcana';
+  latitude: string;
+  longitude: string;
+  eventDistance: string;
+  eventNameFilter: string;
+  storeNameFilter: string;
+  showPastEvents: boolean;
+}
+
+const initialState: HeaderState = {
   activeTab: DEFAULT_GAME,
   latitude: getLatitude() || DEFAULT_COORDINATES.LATITUDE,
   longitude: getLongitude() || DEFAULT_COORDINATES.LONGITUDE,
@@ -21,7 +31,7 @@ export const headerSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
-    setActiveTab: (state, action) => {
+    setActiveTab: (state, action: { payload: 'riftbound' | 'lorcana' }) => {
       state.activeTab = action.payload;
     },
     setLocation: (state, action) => {

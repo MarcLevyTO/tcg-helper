@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTodayFormatted } from '@/src/utils/utils';
 
-export const useEventsForStore = (storeId: string, game: string) => {
+export const useEventsForStore = (storeId: string | number | null, game: string) => {
   const date = getTodayFormatted();
   return useQuery({
     queryKey: ['events', game, storeId],
