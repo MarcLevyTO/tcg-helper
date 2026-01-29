@@ -55,6 +55,21 @@
     /* Match container bg */
     padding-bottom: 10px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+
+    /* Reorder: Label (1), Buttons (2) */
+    .rbc-toolbar-label {
+      order: 1;
+      flex-grow: 1;
+      text-align: left;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .rbc-btn-group {
+      order: 2;
+    }
 
     button {
       color: #e5e7eb;
@@ -84,11 +99,6 @@
         }
       }
     }
-  }
-
-  .rbc-toolbar-label {
-    font-size: 1.125rem;
-    font-weight: 600;
   }
 
   /* Events */

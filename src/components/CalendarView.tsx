@@ -71,15 +71,10 @@ const CalendarView = ({ events, activeTab, latitude, longitude, maxDistance }: C
     setSelectedEvent(calendarEvent.resource);
   };
 
-  const [view, setView] = useState<View>('day'); // Default to day view
   const [date, setDate] = useState(new Date());
 
   const onNavigate = (newDate: Date) => {
     setDate(newDate);
-  };
-
-  const onView = (newView: View) => {
-    setView(newView);
   };
 
   const minTime = new Date();
@@ -107,11 +102,10 @@ const CalendarView = ({ events, activeTab, latitude, longitude, maxDistance }: C
         endAccessor="end"
         style={{ height: 'calc(100vh - 200px)' }}
         onSelectEvent={handleSelectEvent}
-        views={['month', 'week', 'day']}
-        view={view} // Controlled view
+        views={['day']}
+        defaultView='day'
         date={date} // Controlled date
         onNavigate={onNavigate} // Callback for date navigation
-        onView={onView} // Callback for view switching
         min={minTime}
         max={maxTime}
         components={{
